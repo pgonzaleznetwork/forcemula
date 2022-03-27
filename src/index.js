@@ -1,0 +1,60 @@
+const { functionExpression } = require('@babel/types');
+let {isOperator,isFunction, removeWhiteSpace, isCustomField} = require('../lib/utils');
+
+function parse(formula){
+
+    let functions = [];
+    let operators = [];
+    let standardFields = [];
+    let customFields = [];
+
+    formula = removeWhiteSpace(formula);
+    let chars = formula.split('');
+
+    let currentWord = '';
+    let insideString = false;
+
+    chars.forEach((char,index,text) => {
+
+        if(!isOperator(char)){
+
+            if(char == `"`){
+                insideString = !insideString;
+            }
+
+            if(!insideString){
+
+                currentWord += char;
+
+                if(currentWord.length > 1){
+
+                    if(isFunction(currentWord)){
+                        functions.push(currentWord);
+                        currentWord = '';
+                    }
+                    else if(isCustomField(currentWord)){
+                        customFields.push(currentWord)
+                    }
+                    else{
+                        standardFields.push(currentWord);
+                    }
+                }
+            }            
+        }
+        else{
+            currentWord = '';
+            operators.push(char)  
+        }
+
+    });
+
+    return {
+        functions,
+        operators,
+        standardFields,
+        customFields
+    }
+
+}
+
+module.exports = parse;
