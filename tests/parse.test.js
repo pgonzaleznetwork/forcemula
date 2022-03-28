@@ -11,7 +11,7 @@ let complexAccountFormula = `IF (AND (AnnualRevenue > 10000000,
     "Cold")
     && TEXT(Tier__c) == "value"`
 
-/*test('Simple formula: Functions are returned in functions[]',() =>{
+test('Simple formula: Functions are returned in functions[]',() =>{
 
     let result = parse(simpleFormula);
 
@@ -51,7 +51,7 @@ test('Functions inside quotes should be ignored',() =>{
     expect(result.functions).not.toContain('ISBLANK');
     expect(result.functions).not.toContain('CASE');
     expect(result.functions).not.toContain('CONTAINS');
-})*/
+})
 
 test('Standard fields should be captured',() =>{
 
