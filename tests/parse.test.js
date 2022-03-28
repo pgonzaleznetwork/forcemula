@@ -11,7 +11,7 @@ let complexAccountFormula = `IF (AND (AnnualRevenue > 10000000,
     "Cold")
     && TEXT(Tier__c) == "value"`
 
-test('Simple formula: Functions are returned in functions[]',() =>{
+/*test('Simple formula: Functions are returned in functions[]',() =>{
 
     let result = parse(simpleFormula);
 
@@ -51,11 +51,11 @@ test('Functions inside quotes should be ignored',() =>{
     expect(result.functions).not.toContain('ISBLANK');
     expect(result.functions).not.toContain('CASE');
     expect(result.functions).not.toContain('CONTAINS');
-})
+})*/
 
 test('Standard fields should be captured',() =>{
 
-    let result = parse(complexAccountFormula);
+    let result = parse(`IF(ISBLANK(BillingCountry),AnnualRevenue,Type) && CONTAINS(IsPICKVAL(custom__c))`);
 
     expect(result.standardFields.length).toBe(3);
 
@@ -68,6 +68,7 @@ test('custom fields should be captured',() =>{
 
     let result = parse(complexAccountFormula);
 
+    expect(result.customFields.length).toBe(2);
 
     expect(result.customFields).toContain('CustomerPriority__c');
     expect(result.customFields).toContain('Tier__c');
