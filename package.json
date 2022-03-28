@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "test": "jest --silent=false --verbose=true"
+    "test": "jest --silent=false --verbose=true --detectOpenHandles=true"
   },
   "author": "Pablo Gonzalez",
   "license": "ISC",

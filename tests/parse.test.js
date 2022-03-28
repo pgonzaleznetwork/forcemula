@@ -13,19 +13,20 @@ let complexAccountFormula = `IF (AND (AnnualRevenue > 10000000,
 
 test('Simple formula: Functions are returned in functions[]',() =>{
 
-    let result = parse(simpleFormula);
+    let result = parse({object:'Account',formula:simpleFormula});
 
     expect(result.functions).toContain('ISBLANK');
     expect(result.functions).toContain('IF');
 
     expect(result.functions).not.toContain('text');
-    expect(result.functions).not.toContain('true')
-    expect(result.functions).not.toContain('false')
+
 })
 
 test('Complex formula: Functions are returned in functions[]',() =>{
 
-    let result = parse(complexAccountFormula);
+    let result = parse({object:'Account',formula:complexAccountFormula});
+
+    console.log(result)
 
     expect(result.functions).toContain('IF');
     expect(result.functions).toContain('AND');
@@ -43,7 +44,7 @@ test('Functions inside quotes should be ignored',() =>{
 
     let formula = 'IF(TRUE,"ISBLANK*CASE","Another value CONTAINS") && PRIORVALUE()'
 
-    let result = parse(formula);
+    let result = parse({object:'Account',formula});
 
     expect(result.functions).toContain('IF');
     expect(result.functions).toContain('PRIORVALUE');
@@ -55,41 +56,68 @@ test('Functions inside quotes should be ignored',() =>{
 
 test('Standard fields should be captured',() =>{
 
-    let result = parse(`IF(ISBLANK(BillingCountry),AnnualRevenue,Type) && CONTAINS(IsPICKVAL(custom__c))`);
+    let result = parse({object:'Account',formula:`IF(ISBLANK(BillingCountry),AnnualRevenue,Type) && CONTAINS(IsPICKVAL(custom__c))`});
 
     expect(result.standardFields.size).toBe(3);
 
-    expect(result.standardFields).toContain('BillingCountry');
-    expect(result.standardFields).toContain('AnnualRevenue');
-    expect(result.standardFields).toContain('Type');
+    expect(result.standardFields).toContain('Account.BillingCountry');
+    expect(result.standardFields).toContain('Account.AnnualRevenue');
+    expect(result.standardFields).toContain('Account.Type');
 })
 
 test('custom fields should be captured',() =>{
 
-    let result = parse(complexAccountFormula);
+    let result = parse({object:'Account',formula:complexAccountFormula});
 
     expect(result.customFields.size).toBe(2);
 
-    expect(result.customFields).toContain('CustomerPriority__c');
-    expect(result.customFields).toContain('Tier__c');
+    expect(result.customFields).toContain('Account.CustomerPriority__c');
+    expect(result.customFields).toContain('Account.Tier__c');
 })
 
 test('Escaped strings should behave like any other operator',() =>{
 
-    let result = parse(`ISPICKVAL(CustomerPriority__c,\"High\") &&  ISBLANK(TEXT(Type))`);
+    let result = parse({object:'Account',formula:`ISPICKVAL(CustomerPriority__c,\"High\") &&  ISBLANK(TEXT(Type))`});
 
     expect(result.customFields.size).toBe(1);
     expect(result.standardFields.size).toBe(1);
 
-    expect(result.customFields).toContain('CustomerPriority__c');
-    expect(result.standardFields).toContain('Type');
+    expect(result.customFields).toContain('Account.CustomerPriority__c');
+    expect(result.standardFields).toContain('Account.Type');
 })
 
 
 test('Only interesting operators should be captured',() =>{
 
-    let result = parse(`ISPICKVAL(CustomerPriority__c,\"High\") &&  ISBLANK(TEXT(Type+Industry))`);
-    
+    let result = parse({object:'Account',formula:`ISPICKVAL(CustomerPriority__c,\"High\") &&  ISBLANK(TEXT(Type+Industry))`});
+
     expect(result.operators.size).toBe(2);
 
 })
+
+test('Relationships are captured and not broken down by object',() =>{
+
+    let result = parse({object:'Account',formula:`ISBLANK(Owner.Address) && original_lead__r.CleanStatus = "Clean" `});
+
+    expect(result.standardFields).toContain('Account.Owner.Address');
+    expect(result.standardFields).toContain('Account.original_lead__r.CleanStatus');
+
+})
+
+test('Whether a field is standard or custom is determined by the last field in the relationship',() =>{
+
+    let result = parse({object:'Account',formula:`Parent.original_lead__r.CreatedBy.Contact.Account.Name != Parent.original_lead__r.CreatedBy.Contact.Account.CustomerPriority__c`});
+
+    expect(result.standardFields).toContain('Account.Parent.original_lead__r.CreatedBy.Contact.Account.Name');
+    expect(result.customFields).toContain('Account.Parent.original_lead__r.CreatedBy.Contact.Account.CustomerPriority__c');
+
+})
+
+test('Numbers should not be captured as standard fields', () => {
+
+    let result = parse({object:'Account',formula:`IF(Rev__c > 2000,true,false)`})
+
+    expect(result.standardFields.size).toBe(0);
+
+})
+
