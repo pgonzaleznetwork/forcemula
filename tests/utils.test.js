@@ -1,4 +1,4 @@
-let {isOperator,isFunction, removeWhiteSpace, isCustomField} = require('../lib/utils');
+let {isOperator,isFunction, removeWhiteSpace, isCustomField,isInterestingOperator} = require('../lib/utils');
 
 test('* is an operator',() =>{
   expect(isOperator('*')).toBe(true);
@@ -43,5 +43,13 @@ test('Removes white space',() =>{
 
 test('Is custom field',() =>{
   expect(isCustomField('Account__c')).toBe(true);
+})
+
+test('Interesting operators',() =>{
+
+  expect(isInterestingOperator('*')).toBe(true);
+  expect(isInterestingOperator(',')).toBe(false);
+  expect(isInterestingOperator('(')).toBe(false);
+
 })
 

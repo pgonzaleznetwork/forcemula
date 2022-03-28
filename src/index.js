@@ -1,12 +1,14 @@
 const { functionExpression } = require('@babel/types');
-let {isOperator,isFunction, removeWhiteSpace, isCustomField} = require('../lib/utils');
+let {isOperator,isFunction, removeWhiteSpace, isCustomField,isInterestingOperator} = require('../lib/utils');
 
 function parse(formula){
 
-    let functions = [];
-    let operators = [];
-    let standardFields = [];
-    let customFields = [];
+    console.log('what is passed',formula)
+
+    let functions = new Set();
+    let operators = new Set();
+    let standardFields = new Set();
+    let customFields = new Set();
 
     formula = removeWhiteSpace(formula);
     let chars = formula.split('');
@@ -16,29 +18,42 @@ function parse(formula){
 
     chars.forEach((char,index,text) => {
 
+        console.log('char being evaluated',char)
+
         if(char == `"`){
             insideString = !insideString;
+            return;
         }
 
         if(!insideString){
 
+            console.log('we are not inside a string');
+
             if(!isOperator(char)){
+                console.log(char,'is not an operator so we add it to the current word')
+                console.log('current word ',currentWord);
                 currentWord += char;  
+                console.log('after addition ',currentWord);
             }
             else{
+
+                console.log(char, ' is an operator')
                 
-                operators.push(char);
+                if(isInterestingOperator(char)) operators.add(char)
+                
 
                 if(currentWord != '' && currentWord.length > 1 ){  
+
+                    console.log('current word is long enough and we just found a char ',currentWord,char)
     
                     if(isFunction(currentWord)){
-                        functions.push(currentWord);
+                        functions.add(currentWord);
                     }
                     else if(isCustomField(currentWord)){
-                        customFields.push(currentWord)
+                        customFields.add(currentWord)
                     }
                     else{
-                        standardFields.push(currentWord);
+                        standardFields.add(currentWord);
                     }
     
                     currentWord = '';

@@ -57,7 +57,7 @@ test('Standard fields should be captured',() =>{
 
     let result = parse(`IF(ISBLANK(BillingCountry),AnnualRevenue,Type) && CONTAINS(IsPICKVAL(custom__c))`);
 
-    expect(result.standardFields.length).toBe(3);
+    expect(result.standardFields.size).toBe(3);
 
     expect(result.standardFields).toContain('BillingCountry');
     expect(result.standardFields).toContain('AnnualRevenue');
@@ -68,8 +68,28 @@ test('custom fields should be captured',() =>{
 
     let result = parse(complexAccountFormula);
 
-    expect(result.customFields.length).toBe(2);
+    expect(result.customFields.size).toBe(2);
 
     expect(result.customFields).toContain('CustomerPriority__c');
     expect(result.customFields).toContain('Tier__c');
+})
+
+test('Escaped strings should behave like any other operator',() =>{
+
+    let result = parse(`ISPICKVAL(CustomerPriority__c,\"High\") &&  ISBLANK(TEXT(Type))`);
+
+    expect(result.customFields.size).toBe(1);
+    expect(result.standardFields.size).toBe(1);
+
+    expect(result.customFields).toContain('CustomerPriority__c');
+    expect(result.standardFields).toContain('Type');
+})
+
+
+test('Only interesting operators should be captured',() =>{
+
+    let result = parse(`ISPICKVAL(CustomerPriority__c,\"High\") &&  ISBLANK(TEXT(Type+Industry))`);
+    
+    expect(result.operators.size).toBe(2);
+
 })
