@@ -1,55 +1,61 @@
-let {isOperator,isFunction, removeWhiteSpace, isCustomField,isInterestingOperator} = require('../lib/utils');
+let _ = require('../lib/utils');
 
 test('* is an operator',() =>{
-  expect(isOperator('*')).toBe(true);
+  expect(_.isOperator('*')).toBe(true);
 })
 
 test('ISBLANK is not an operator',() =>{
-  expect(isOperator('ISBLANK')).toBe(false);
+  expect(_.isOperator('ISBLANK')).toBe(false);
 })
 
 test('White space does not affect isOperator',() =>{
-  expect(isOperator('* ')).toBe(true);
+  expect(_.isOperator('* ')).toBe(true);
 })
 
 test('ISBLANK is a function',() =>{
-  expect(isFunction('ISBLANK')).toBe(true);
+  expect(_.isFunction('ISBLANK')).toBe(true);
 })
 
 test('Case does not affect isFunction',() =>{
-  expect(isFunction('IsBLank')).toBe(true);
+  expect(_.isFunction('IsBLank')).toBe(true);
 })
 
 test('White space does not affect isFunction',() =>{
-  expect(isFunction('IsBLank ')).toBe(true);
+  expect(_.isFunction('IsBLank ')).toBe(true);
 })
 
 test('isFunction: undefined returns fallse',() =>{
-  expect(isFunction(undefined)).toBe(false);
+  expect(_.isFunction(undefined)).toBe(false);
 })
 
 test('isFunction: Empty string returns false',() =>{
-  expect(isFunction('')).toBe(false);
+  expect(_.isFunction('')).toBe(false);
 })
 
 test('isFunction: null returns false',() =>{
-  expect(isFunction(null)).toBe(false);
+  expect(_.isFunction(null)).toBe(false);
 })
 
 
 test('Removes white space',() =>{
-  expect(removeWhiteSpace(' there is space ')).toBe('thereisspace');
+  expect(_.removeWhiteSpace(' there is space ')).toBe('thereisspace');
 })
 
 test('Is custom field',() =>{
-  expect(isCustomField('Account__c')).toBe(true);
+  expect(_.isCustomField('Account__c')).toBe(true);
 })
 
 test('Interesting operators',() =>{
 
-  expect(isInterestingOperator('*')).toBe(true);
-  expect(isInterestingOperator(',')).toBe(false);
-  expect(isInterestingOperator('(')).toBe(false);
+  expect(_.isInterestingOperator('*')).toBe(true);
+  expect(_.isInterestingOperator(',')).toBe(false);
+  expect(_.isInterestingOperator('(')).toBe(false);
 
 })
 
+test('Is standard relationship',() =>{
+
+  expect(_.isStandardRelationship('Account')).toBe(true);
+  expect(_.isStandardRelationship('Account__r')).toBe(false);
+
+})

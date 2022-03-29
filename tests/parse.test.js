@@ -26,8 +26,6 @@ test('Complex formula: Functions are returned in functions[]',() =>{
 
     let result = parse({object:'Account',formula:complexAccountFormula});
 
-    console.log(result)
-
     expect(result.functions).toContain('IF');
     expect(result.functions).toContain('AND');
     expect(result.functions).toContain('CONTAINS');
@@ -95,24 +93,6 @@ test('Only interesting operators should be captured',() =>{
 
 })
 
-test('Relationships are captured and not broken down by object',() =>{
-
-    let result = parse({object:'Account',formula:`ISBLANK(Owner.Address) && original_lead__r.CleanStatus = "Clean" `});
-
-    expect(result.standardFields).toContain('Account.Owner.Address');
-    expect(result.standardFields).toContain('Account.original_lead__r.CleanStatus');
-
-})
-
-test('Whether a field is standard or custom is determined by the last field in the relationship',() =>{
-
-    let result = parse({object:'Account',formula:`Parent.original_lead__r.CreatedBy.Contact.Account.Name != Parent.original_lead__r.CreatedBy.Contact.Account.CustomerPriority__c`});
-
-    expect(result.standardFields).toContain('Account.Parent.original_lead__r.CreatedBy.Contact.Account.Name');
-    expect(result.customFields).toContain('Account.Parent.original_lead__r.CreatedBy.Contact.Account.CustomerPriority__c');
-
-})
-
 test('Numbers should not be captured as standard fields', () => {
 
     let result = parse({object:'Account',formula:`IF(Rev__c > 2000,true,false)`})
@@ -120,4 +100,20 @@ test('Numbers should not be captured as standard fields', () => {
     expect(result.standardFields.size).toBe(0);
 
 })
+
+/*test('Fields used thru standard relatinships should be captured using their full name',() =>{
+
+    let result = parse({object:'Account',formula:`ISBLANK(Owner.Address) && original_lead__r.CleanStatus = "Clean" `});
+
+    expect(result.standardFields).toContain('Account.OwnerId');
+    expect(result.standardFields).toContain('User.Address');
+    expect(result.customFields).toContain('Account.original_lead__c');
+
+    expect(results.unknownRelationshipFields).toContain('Account.original_lead__c.CleanStatus')
+
+})
+*/
+
+
+
 
