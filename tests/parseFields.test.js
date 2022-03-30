@@ -53,3 +53,18 @@ test('Mix of custom and standard relationships',() =>{
     expect(fields.size).toBe(4);
   
 })
+
+test('All relationship fields',() =>{
+
+    let fields = parseField('Account.first__r.second__r.third__r.fourth__r.FirstName');
+
+    console.log(fields);
+
+    expect(fields).toContain('Account.first__c')
+    expect(fields).toContain('first__r.second__c')
+    expect(fields).toContain('second__r.third__c')
+    expect(fields).toContain('third__r.fourth__c')
+    expect(fields).toContain('fourth__r.FirstName')
+    expect(fields.size).toBe(5);
+  
+})
