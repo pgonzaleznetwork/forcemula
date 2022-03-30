@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1648665983829" clover="3.2.0">
+  <project timestamp="1648665983829" name="All files">
+    <metrics statements="88" coveredstatements="88" conditionals="37" coveredconditionals="35" methods="21" coveredmethods="21" elements="146" coveredelements="144" complexity="0" loc="88" ncloc="88" packages="2" files="3" classes="3"/>
+    <package name="lib">
+      <metrics statements="52" coveredstatements="52" conditionals="19" coveredconditionals="17" methods="16" coveredmethods="16"/>
+      <file name="parseFields.js" path="/Users/pgonzalez/Documents/apps/sfdc-formula-parser/lib/parseFields.js">
+        <metrics statements="19" coveredstatements="19" conditionals="10" coveredconditionals="10" methods="2" coveredmethods="2"/>
+        <line num="1" count="2" type="stmt"/>
+        <line num="5" count="31" type="stmt"/>
+        <line num="7" count="31" type="cond" truecount="2" falsecount="0"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="11" count="1" type="stmt"/>
+        <line num="14" count="30" type="stmt"/>
+        <line num="17" count="73" type="cond" truecount="2" falsecount="0"/>
+        <line num="19" count="43" type="stmt"/>
+        <line num="20" count="43" type="stmt"/>
+        <line num="21" count="43" type="stmt"/>
+        <line num="23" count="43" type="cond" truecount="2" falsecount="0"/>
+        <line num="25" count="13" type="cond" truecount="2" falsecount="0"/>
+        <line num="26" count="7" type="stmt"/>
+        <line num="29" count="6" type="stmt"/>
+        <line num="33" count="43" type="cond" truecount="2" falsecount="0"/>
+        <line num="34" count="2" type="stmt"/>
+        <line num="37" count="43" type="stmt"/>
+        <line num="42" count="30" type="stmt"/>
+        <line num="46" count="2" type="stmt"/>
+      </file>
+      <file name="utils.js" path="/Users/pgonzalez/Documents/apps/sfdc-formula-parser/lib/utils.js">
+        <metrics statements="33" coveredstatements="33" conditionals="9" coveredconditionals="7" methods="14" coveredmethods="14"/>
+        <line num="1" count="3" type="stmt"/>
+        <line num="3" count="653" type="cond" truecount="1" falsecount="1"/>
+        <line num="5" count="653" type="stmt"/>
+        <line num="6" count="653" type="stmt"/>
+        <line num="9" count="3" type="stmt"/>
+        <line num="11" count="81" type="cond" truecount="2" falsecount="0"/>
+        <line num="13" count="78" type="stmt"/>
+        <line num="14" count="78" type="stmt"/>
+        <line num="15" count="78" type="stmt"/>
+        <line num="18" count="9" type="stmt"/>
+        <line num="20" count="759" type="cond" truecount="3" falsecount="0"/>
+        <line num="22" count="3" type="stmt"/>
+        <line num="24" count="25" type="cond" truecount="1" falsecount="1"/>
+        <line num="26" count="25" type="stmt"/>
+        <line num="30" count="27" type="stmt"/>
+        <line num="33" count="158" type="stmt"/>
+        <line num="35" count="15" type="stmt"/>
+        <line num="37" count="8" type="stmt"/>
+        <line num="39" count="3" type="stmt"/>
+        <line num="40" count="7" type="stmt"/>
+        <line num="41" count="7" type="stmt"/>
+        <line num="42" count="7" type="stmt"/>
+        <line num="45" count="3" type="stmt"/>
+        <line num="47" count="47" type="stmt"/>
+        <line num="49" count="47" type="stmt"/>
+        <line num="53" count="6" type="stmt"/>
+        <line num="55" count="32" type="stmt"/>
+        <line num="57" count="3" type="stmt"/>
+        <line num="60" count="2" type="stmt"/>
+        <line num="61" count="2" type="stmt"/>
+        <line num="64" count="3" type="stmt"/>
+        <line num="82" count="3" type="stmt"/>
+        <line num="170" count="3" type="stmt"/>
+      </file>
+    </package>
+    <package name="src">
+      <metrics statements="36" coveredstatements="36" conditionals="18" coveredconditionals="18" methods="5" coveredmethods="5"/>
+      <file name="index.js" path="/Users/pgonzalez/Documents/apps/sfdc-formula-parser/src/index.js">
+        <metrics statements="36" coveredstatements="36" conditionals="18" coveredconditionals="18" methods="5" coveredmethods="5"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="6" count="8" type="stmt"/>
+        <line num="7" count="8" type="stmt"/>
+        <line num="8" count="8" type="stmt"/>
+        <line num="9" count="8" type="stmt"/>
+        <line num="11" count="8" type="stmt"/>
+        <line num="13" count="8" type="stmt"/>
+        <line num="14" count="8" type="stmt"/>
+        <line num="16" count="8" type="stmt"/>
+        <line num="18" count="1008" type="cond" truecount="2" falsecount="0"/>
+        <line num="19" count="78" type="stmt"/>
+        <line num="20" count="78" type="stmt"/>
+        <line num="23" count="930" type="cond" truecount="2" falsecount="0"/>
+        <line num="25" count="650" type="cond" truecount="2" falsecount="0"/>
+        <line num="26" count="495" type="stmt"/>
+        <line num="31" count="155" type="cond" truecount="2" falsecount="0"/>
+        <line num="33" count="155" type="cond" truecount="4" falsecount="0"/>
+        <line num="34" count="75" type="stmt"/>
+        <line num="39" count="930" type="stmt"/>
+        <line num="45" count="75" type="cond" truecount="2" falsecount="0"/>
+        <line num="47" count="48" type="stmt"/>
+        <line num="48" count="48" type="stmt"/>
+        <line num="49" count="48" type="stmt"/>
+        <line num="52" count="27" type="cond" truecount="2" falsecount="0"/>
+        <line num="54" count="3" type="stmt"/>
+        <line num="55" count="3" type="stmt"/>
+        <line num="59" count="24" type="stmt"/>
+        <line num="61" count="24" type="stmt"/>
+        <line num="63" count="24" type="cond" truecount="2" falsecount="0"/>
+        <line num="64" count="8" type="stmt"/>
+        <line num="67" count="16" type="stmt"/>
+        <line num="71" count="24" type="stmt"/>
+        <line num="75" count="75" type="stmt"/>
+        <line num="78" count="8" type="stmt"/>
+        <line num="87" count="1" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>

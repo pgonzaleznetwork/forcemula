@@ -68,14 +68,12 @@ test('User-related fields are transformed to User.[field]', () => {
 
 })
 
-test('custom metadata', () => {
+test('Custom metadata fields are parsed correctly', () => {
 
     let fields = parseField('$CustomMetadata.Trigger_Context_Status__mdt.SRM_Metadata_c.Enable_After_Insert__c');
 
-    console.log(fields);
-
     expect(fields).toContain('Trigger_Context_Status__mdt.Enable_After_Insert__c');
-        
+    expect(fields.size).toBe(1);        
 
 })
 

@@ -23,13 +23,7 @@ function parse({object,formula}){
         if(!insideString){
 
             if(!_.isOperator(char)){
-
                 currentWord += char;  
-
-                //last character
-                if( (text.length-1) == index ){
-                    determineType(currentWord);
-                }   
             }
 
             else{
