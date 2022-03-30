@@ -77,3 +77,23 @@ test('Transform to User field', () => {
   expect(_.transformToUserField('LastModifiedBY.area__c')).toBe('User.area__c');
 
 })
+
+test('Transform to Id', () => {
+  expect(_.transformToId('Owner.Manager')).toBe('Owner.ManagerId');
+})
+
+test('Transform to field name', () => {
+  expect(_.transformToFieldName('Owner.custom__r')).toBe('Owner.custom__c');
+})
+
+test('Is custom metadata', () => {
+  expect(_.isCustomMetadata(`$CustomMetadata.Trigger_Context_Status__mdt.SRM_Metadata_c.Enable_After_Insert__c`)).toBe(true);
+})
+
+test('Parse custom metadata field', () => {
+
+  let field = '$CustomMetadata.Trigger_Context_Status__mdt.SRM_Metadata_c.Enable_After_Insert__c';
+
+  expect(_.parseCustomMetadataField(field)).toBe('Trigger_Context_Status__mdt.Enable_After_Insert__c');
+      
+})

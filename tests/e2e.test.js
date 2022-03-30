@@ -56,8 +56,6 @@ test('Standard fields should be captured',() =>{
 
     let result = parse({object:'Account',formula:`IF(ISBLANK(BillingCountry),AnnualRevenue,Type) && CONTAINS(IsPICKVAL(custom__c))`});
 
-    console.log(result);
-
     expect(result.standardFields.size).toBe(3);
 
     expect(result.standardFields).toContain('Account.BillingCountry');
@@ -103,18 +101,7 @@ test('Numbers should not be captured as standard fields', () => {
 
 })
 
-/*test('Fields used thru standard relatinships should be captured using their full name',() =>{
 
-    let result = parse({object:'Account',formula:`ISBLANK(Owner.Address) && original_lead__r.CleanStatus = "Clean" `});
-
-    expect(result.standardFields).toContain('Account.OwnerId');
-    expect(result.standardFields).toContain('User.Address');
-    expect(result.customFields).toContain('Account.original_lead__c');
-
-    expect(results.unknownRelationshipFields).toContain('Account.original_lead__c.CleanStatus')
-
-})
-*/
 
 
 
