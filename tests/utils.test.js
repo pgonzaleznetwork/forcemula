@@ -59,3 +59,21 @@ test('Is standard relationship',() =>{
   expect(_.isStandardRelationship('Account__r')).toBe(false);
 
 })
+
+test('Is user field', () => {
+
+  expect(_.isUserField('Owner.FirstName')).toBe(true);
+  expect(_.isUserField('Manager.FirstName')).toBe(true);
+  expect(_.isUserField('CreatedBy.FirstName')).toBe(true);
+  expect(_.isUserField('LastModifiedBY.FirstName')).toBe(true);
+
+})
+
+test('Transform to User field', () => {
+
+  expect(_.transformToUserField('Owner.FirstName')).toBe('User.FirstName');
+  expect(_.transformToUserField('Manager.FirstName')).toBe('User.FirstName');
+  expect(_.transformToUserField('CreatedBy.FirstName')).toBe('User.FirstName');
+  expect(_.transformToUserField('LastModifiedBY.area__c')).toBe('User.area__c');
+
+})

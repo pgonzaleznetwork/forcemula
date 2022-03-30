@@ -56,6 +56,8 @@ test('Standard fields should be captured',() =>{
 
     let result = parse({object:'Account',formula:`IF(ISBLANK(BillingCountry),AnnualRevenue,Type) && CONTAINS(IsPICKVAL(custom__c))`});
 
+    console.log(result);
+
     expect(result.standardFields.size).toBe(3);
 
     expect(result.standardFields).toContain('Account.BillingCountry');

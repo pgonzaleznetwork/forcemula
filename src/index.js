@@ -1,4 +1,4 @@
-const { functionExpression } = require('@babel/types');
+let parseField = require('../lib/parseFields');
 let _ = require('../lib/utils');
 
 function parse({object,formula}){
@@ -31,6 +31,7 @@ function parse({object,formula}){
                     determineType(currentWord);
                 }   
             }
+
             else{
                 
                 if(_.isInterestingOperator(char)) operators.add(char)
@@ -38,39 +39,45 @@ function parse({object,formula}){
                 if(currentWord != '' && currentWord.length > 1 ){  
                     determineType(currentWord);
                 }
-                else{
-                    return;
-                }
             }
         }  
-        else{
-            return;
-        }
-
+        
+        return;
     });
 
 
     function determineType(value){
 
-        let fieldSyntax = value;
-
-        if(!_.isNothing(object)){
-            fieldSyntax = `${object}.${value}`;
-        }
-
         if(_.isFunction(value)){
+
             functions.add(value);
-        }
-        else if(_.isCustomField(value)){
-            customFields.add(fieldSyntax)
-        }
-        else if(_.isNumber(value)){
-            //do nothing;
-        }
-        else{
-            standardFields.add(fieldSyntax);
+            clearWord();
+            return;
         }
 
+        else if(_.isNumber(value)){
+
+            clearWord();
+            return;
+        }
+
+        //if we get here, we know it's a field  
+        value = `${object}.${value}`;
+        
+        Array.from(parseField(value)).forEach(field => {
+
+            if(_.isCustomField(field)){
+                customFields.add(field)
+            }
+            else{
+                standardFields.add(field);
+            }
+        })
+
+        clearWord();
+    }
+
+    function clearWord(){
         currentWord = '';
     }
 
