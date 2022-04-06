@@ -1,5 +1,6 @@
-let parseField = require('../lib/parseFields');
+let parseType = require('../lib/parseTypes');
 let _ = require('../lib/utils');
+let ValueType = require('../lib/ValueTypes');
 
 function parse({object,formula}){
 
@@ -7,6 +8,10 @@ function parse({object,formula}){
     let operators = new Set();
     let standardFields = new Set();
     let customFields = new Set();
+    let customSettings = new Set();
+    let customMetadataTypes = new Set();
+    let customLabels = new Set();
+    let types = [];
 
     let chars = _.removeWhiteSpace(formula).split('');
 
@@ -39,6 +44,29 @@ function parse({object,formula}){
         return;
     });
 
+    types.forEach(t => {
+
+        if(t.type == ValueType.CUSTOM_FIELD){
+            customFields.add(t.instance);
+        }
+
+        else if(t.type == ValueType.STANDARD_FIELD){
+            standardFields.add(t.instance);
+        }
+
+        else if(t.type == ValueType.CUSTOM_LABEL){
+            customLabels.add(t.instance);
+        }
+
+        else if(t.type == ValueType.CUSTOM_METADATA_TYPE){
+            customMetadataTypes.add(t.instance);
+        }
+
+        else if(t.type == ValueType.CUSTOM_SETTING){
+            customSettings.add(t.instance);
+        }
+
+    })
 
     function determineType(value){
 
@@ -54,19 +82,9 @@ function parse({object,formula}){
             clearWord();
             return;
         }
-
-        //if we get here, we know it's a field  
-        value = `${object}.${value}`;
-        
-        Array.from(parseField(value)).forEach(field => {
-
-            if(_.isCustomField(field)){
-                customFields.add(field)
-            }
-            else{
-                standardFields.add(field);
-            }
-        })
+        else{
+            types.push(...parseType(value,object));
+        }
 
         clearWord();
     }
@@ -79,7 +97,10 @@ function parse({object,formula}){
         functions,
         operators,
         standardFields,
-        customFields
+        customFields,
+        customLabels,
+        customMetadataTypes,
+        customSettings
     }
 
 }

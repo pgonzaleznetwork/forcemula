@@ -38,6 +38,8 @@ test('Complex formula: Functions are returned in functions[]',() =>{
     expect(result.functions).not.toContain('false')
 })
 
+
+
 test('Functions inside quotes should be ignored',() =>{
 
     let formula = 'IF(TRUE,"ISBLANK*CASE","Another value CONTAINS") && PRIORVALUE()'
