@@ -1,50 +1,183 @@
-/*let parseType = require('../lib/parseTypes');
+let parseType = require('../lib/parseTypes');
+const ValueType = require('../lib/ValueTypes');
+let originalObject = 'Account';
 
 
-test('Single fields are returned as is',() =>{
+test('Passing a single STANDARD field name should return the same field, but with the original object as a prefix',() =>{
 
-    let fields = parseType('Account.Name');
+    let types = parseType('Name',originalObject);
 
-    expect(fields).toContain('Account.Name')
-    expect(fields.size).toBe(1);
+    let expected = [
+        {
+            type : ValueType.STANDARD_FIELD,
+            instance:'Account.Name'
+        },
+    ]
+
+    expect(types).toEqual(expect.arrayContaining(expected));  
+})
+
+test('Passing a single CUSTOM field name should return the same field, but with the original object as a prefix',() =>{
+
+    let types = parseType('custom__C',originalObject);
+
+    let expected = [
+        {
+            type : ValueType.CUSTOM_FIELD,
+            instance:'Account.custom__C'
+        },
+    ]
+
+    expect(types).toEqual(expect.arrayContaining(expected));  
+})
+
+
+
+test('Standard self-referential relationships should be converted back to their original type',() =>{
+
+    let types = parseType(
+        'Opportunity.Account.Parent.Parent.Parent.Parent.pareNt.AccountNumber',
+        'OpportunityLineItem'
+    );
+
+    let expected = [
+        {
+            type : ValueType.STANDARD_FIELD,
+            instance:'OpportunityLineItem.OpportunityId'
+        },
+        {
+            type : ValueType.STANDARD_FIELD,
+            instance:'Opportunity.AccountId'
+        },
+        {
+            type : ValueType.STANDARD_FIELD,
+            instance:'Account.ParentId'
+        },
+        {
+            type : ValueType.STANDARD_FIELD,
+            instance:'Account.AccountNumber'
+        }
+    ]
+
+    expect(types).toEqual(expect.arrayContaining(expected));  
+})
+
+
+
+test('STANDARD relationships should be converted to their original field name',() =>{
+
+    let types = parseType('Account.Opportunity.Custom__c','Contact');
+
+    let expected = [
+        {
+            type : ValueType.STANDARD_FIELD,
+            instance:'Contact.AccountId'
+        },
+        {
+            type : ValueType.STANDARD_FIELD,
+            instance:'Account.OpportunityId'
+        },
+        {
+            type : ValueType.CUSTOM_FIELD,
+            instance:'Opportunity.Custom__c'
+        }
+    ]
+
+    expect(types).toEqual(expect.arrayContaining(expected)); 
   
 })
 
-test('Standard relationships are converted to their relationship name',() =>{
 
-    let fields = parseType('Account.Opportunity.Name');
+test('CUSTOM relationships should be converted to their original field name',() =>{
 
-    expect(fields).toContain('Account.OpportunityId')
-    expect(fields).toContain('Opportunity.Name')
-    expect(fields.size).toBe(2);
+    let types = parseType('Account.Opportunity__r.Name','Contact');
+
+    let expected = [
+        {
+            type : ValueType.STANDARD_FIELD,
+            instance:'Contact.AccountId'
+        },
+        {
+            type : ValueType.CUSTOM_FIELD,
+            instance:'Account.Opportunity__c'
+        },
+        {
+            type : ValueType.STANDARD_FIELD,
+            instance:'Opportunity__r.Name'
+        }
+    ]
+
+    expect(types).toEqual(expect.arrayContaining(expected)); 
   
 })
 
-test('Custom relationships are converted to their custom field name',() =>{
 
-    let fields = parseType('Account.Opportunity__r.Name');
+test('A mix of custom and standard relationships should result in the same conversation seen in the previous 2 tests',() =>{
 
-    expect(fields).toContain('Account.Opportunity__c')
-    expect(fields).toContain('Opportunity__r.Name')
-    expect(fields.size).toBe(2);
+    let types = parseType('Account.Opportunity__r.Asset.Contact.FirstName','Lead');
+
+    let expected = [
+        {
+            type : ValueType.STANDARD_FIELD,
+            instance:'Lead.AccountId'
+        },
+        {
+            type : ValueType.CUSTOM_FIELD,
+            instance:'Account.Opportunity__c'
+        },
+        {
+            type : ValueType.STANDARD_FIELD,
+            instance:'Opportunity__r.AssetId'
+        },
+        {
+            type : ValueType.STANDARD_FIELD,
+            instance:'Asset.ContactId'
+        },
+        {
+            type : ValueType.STANDARD_FIELD,
+            instance:'Contact.FirstName'
+        }
+    ]
+
+    expect(types).toEqual(expect.arrayContaining(expected)); 
   
 })
 
-test('Mix of custom and standard relationships',() =>{
 
-    let fields = parseType('Account.Opportunity__r.Asset.Contact.FirstName');
 
-    expect(fields).toContain('Account.Opportunity__c')
-    expect(fields).toContain('Opportunity__r.AssetId')
-    expect(fields).toContain('Asset.ContactId')
-    expect(fields).toContain('Contact.FirstName')
-    expect(fields.size).toBe(4);
-  
-})
+test('A chain of custom relationships should be supported',() =>{
 
-test('All relationship fields',() =>{
+    let types = parseType('Account.first__r.second__r.third__r.fourth__r.FirstName','Order');
 
-    let fields = parseType('Account.first__r.second__r.third__r.fourth__r.FirstName');
+    let expected = [
+        {
+            type : ValueType.STANDARD_FIELD,
+            instance:'Order.AccountId'
+        },
+        {
+            type : ValueType.CUSTOM_FIELD,
+            instance:'Account.first__c'
+        },
+        {
+            type : ValueType.STANDARD_FIELD,
+            instance:'first__r.second__c'
+        },
+        {
+            type : ValueType.STANDARD_FIELD,
+            instance:'second__r.third__c'
+        },
+        {
+            type : ValueType.STANDARD_FIELD,
+            instance:'third__r.fourth__c'
+        }
+        ,
+        {
+            type : ValueType.STANDARD_FIELD,
+            instance:'third__r.fourth__c'
+        }
+    ]
+
+    expect(types).toEqual(expect.arrayContaining(expected)); 
 
     expect(fields).toContain('Account.first__c')
     expect(fields).toContain('first__r.second__c')
@@ -54,6 +187,8 @@ test('All relationship fields',() =>{
     expect(fields.size).toBe(5);
   
 })
+
+/*
 
 
 test('User-related fields are transformed to User.[field]', () => {
@@ -96,7 +231,7 @@ test('The $ prefix is removed from special objects like $User, $Profile, $Organi
 
 })
 
-
 */
+
 
 
