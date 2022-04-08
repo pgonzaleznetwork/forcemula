@@ -80,13 +80,9 @@ function organizeInstancesByType(types){
     let allTypes = {};
 
     types.forEach(t => {
-
-        if(allTypes[t.type.name]){
-            allTypes[t.type.name].add(t.instance);
-        }
-        else{
-            allTypes[t.type.name] = new Set([t.instance]);
-        }
+        if(allTypes[t.type.name]) allTypes[t.type.name].add(t.instance);
+        
+        else  allTypes[t.type.name] = new Set([t.instance]);
     })
 
     return allTypes;
