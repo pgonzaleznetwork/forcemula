@@ -46,7 +46,7 @@ function parse({object,formula}){
 
         if(_.isFunction(value)){
 
-            functions.add(value);
+            functions.add(value.toUpperCase());
             clearWord();
             return;
         }
@@ -68,8 +68,8 @@ function parse({object,formula}){
     }
 
     return {
-        functions,
-        operators,
+        functions : Array.from(functions),
+        operators : Array.from(operators),
         ...allTypes
     }
 
@@ -81,11 +81,17 @@ function organizeInstancesByType(types){
 
     types.forEach(t => {
         if(allTypes[t.type.name]) allTypes[t.type.name].add(t.instance);
-        
         else  allTypes[t.type.name] = new Set([t.instance]);
     })
 
-    return allTypes;
+    let result = {}
+
+    //transform sets to arrays 
+    Object.keys(allTypes).map(key => {
+        result[key] = Array.from(allTypes[key]);
+    })
+
+    return result;
 }
 
 module.exports = parse;
