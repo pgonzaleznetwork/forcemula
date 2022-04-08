@@ -16,6 +16,8 @@ function parse({object,formula}){
 
     chars.forEach((char,index,text) => {
 
+        let isLastChar = (text.length-1 == index);
+
         if(char == `"`){
             insideString = !insideString;
             return;
@@ -24,10 +26,15 @@ function parse({object,formula}){
         if(!insideString){
 
             if(!_.isOperator(char)){
+
                 currentWord += char;  
+
+                if(isLastChar){
+                    determineType(currentWord);
+                }
             }
 
-            else{
+            else if(_.isOperator(char)) {
                 
                 if(_.isInterestingOperator(char)) operators.add(char)
                 

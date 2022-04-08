@@ -1,6 +1,17 @@
 let parse = require('../src/index');
 
-test('End-to-end test', () => {
+test('Single-field formula: e2e test', () => {
+
+    let formula = `Name`
+    let result = parse({object:'Account',formula});
+
+    expect(Array.from(result.standardFields)).toEqual(expect.arrayContaining(['Account.Name'])); 
+
+})
+
+
+
+test('Standard formula: e2e test', () => {
 
     let formula = `IF(Owner.Contact.CreatedBy.Manager.Profile.Id = "03d3h000000khEQ",TRUE,false)
 
@@ -94,7 +105,7 @@ test('End-to-end test', () => {
 
 
 
-test('Process Builder formula', () => {
+test('Process Builder formula: e2e test', () => {
 
     let formula = `IF([Account].Owner.Manager.Contact.Account.AccountNumber  = "text" ,TRUE,FALSE)
 
@@ -106,10 +117,52 @@ test('Process Builder formula', () => {
 
         IF($CustomMetadata.Trigger_Context_Status__mdt.by_class.Enable_After_Delete__c , TRUE,FALse)`
 
-
     let result = parse({object:'Account',formula});
 
-    console.log(result)
+    let expectedStandardFields = [
+        'Account.OwnerId',
+        'User.ManagerId',
+        'User.ContactId',
+        'Contact.AccountId',
+        'Account.AccountNumber',
+        'original_lead__r.ConvertedAccountId'
+    ]
+
+    expect(Array.from(result.standardFields)).toEqual(expect.arrayContaining(expectedStandardFields)); 
+
+    let expectedCustomFields = [
+        'Trigger_Context_Status__mdt.Enable_After_Delete__c',
+        'Account.original_lead__c'
+    ]
+
+    expect(Array.from(result.customFields)).toEqual(expect.arrayContaining(expectedCustomFields)); 
+
+    let expectedCustomMetadataTypes = [
+        'Trigger_Context_Status__mdt.by_class'
+    ]
+
+    expect(Array.from(result.customMetadataTypes)).toEqual(expect.arrayContaining(expectedCustomMetadataTypes)); 
+
+})
+
+
+
+test('CPQ Support for SBQQ__Quote__c', () => {
+
+    let formula = `SBQQ__Distributor__r.Name `
+    let result = parse({object:'SBQQ__Quote__c',formula});
+
+    let expectedCustomFields = [
+        'SBQQ__Quote__c.SBQQ__Distributor__c'
+    ]
+
+    expect(Array.from(result.customFields)).toEqual(expect.arrayContaining(expectedCustomFields)); 
+
+    let expectedStandardFields = [
+        'Account.Name'
+    ]
+
+    expect(Array.from(result.standardFields)).toEqual(expect.arrayContaining(expectedStandardFields)); 
 
 })
 
