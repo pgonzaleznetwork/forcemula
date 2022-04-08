@@ -6,12 +6,8 @@ function parse({object,formula}){
 
     let functions = new Set();
     let operators = new Set();
-    let standardFields = new Set();
-    let customFields = new Set();
-    let customSettings = new Set();
-    let customMetadataTypes = new Set();
-    let customLabels = new Set();
     let types = [];
+    let allTypes = {};
 
     let chars = _.removeWhiteSpace(formula).split('');
 
@@ -44,29 +40,7 @@ function parse({object,formula}){
         return;
     });
 
-    types.forEach(t => {
-
-        if(t.type == ValueType.CUSTOM_FIELD){
-            customFields.add(t.instance);
-        }
-
-        else if(t.type == ValueType.STANDARD_FIELD){
-            standardFields.add(t.instance);
-        }
-
-        else if(t.type == ValueType.CUSTOM_LABEL){
-            customLabels.add(t.instance);
-        }
-
-        else if(t.type == ValueType.CUSTOM_METADATA_TYPE){
-            customMetadataTypes.add(t.instance);
-        }
-
-        else if(t.type == ValueType.CUSTOM_SETTING){
-            customSettings.add(t.instance);
-        }
-
-    })
+    allTypes = organizeInstancesByType(types);
 
     function determineType(value){
 
@@ -96,13 +70,26 @@ function parse({object,formula}){
     return {
         functions,
         operators,
-        standardFields,
-        customFields,
-        customLabels,
-        customMetadataTypes,
-        customSettings
+        ...allTypes
     }
 
+}
+
+function organizeInstancesByType(types){
+
+    let allTypes = {};
+
+    types.forEach(t => {
+
+        if(allTypes[t.type.name]){
+            allTypes[t.type.name].add(t.instance);
+        }
+        else{
+            allTypes[t.type.name] = new Set([t.instance]);
+        }
+    })
+
+    return allTypes;
 }
 
 module.exports = parse;

@@ -99,7 +99,7 @@ test('Numbers should not be captured as standard fields', () => {
 
     let result = parse({object:'Account',formula:`IF(Rev__c > 2000,true,false)`})
 
-    expect(result.standardFields.size).toBe(0);
+    expect(result).not.toHaveProperty('standardFields');
 
 })
 
