@@ -30,7 +30,7 @@ test('End-to-end test', () => {
 
     let result = parse({object:'Account',formula});
 
-    console.log(result)
+   
 
     let expectedFunctions = [
         'IF','TRUE','FALSE','TEXT'
@@ -94,7 +94,24 @@ test('End-to-end test', () => {
 
 
 
+test('Process Builder formula', () => {
 
+    let formula = `IF([Account].Owner.Manager.Contact.Account.AccountNumber  = "text" ,TRUE,FALSE)
+
+        ||
+
+        IF([Account].original_lead__r.ConvertedAccountId != "",TRUE,FALSE)
+
+        ||
+
+        IF($CustomMetadata.Trigger_Context_Status__mdt.by_class.Enable_After_Delete__c , TRUE,FALse)`
+
+
+    let result = parse({object:'Account',formula});
+
+    console.log(result)
+
+})
 
 
 
