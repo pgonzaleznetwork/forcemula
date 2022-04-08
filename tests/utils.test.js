@@ -161,10 +161,21 @@ test('Custom Settings are determined by the $Setup prefix', () => {
 
 test('Custom Settings should be parsed by removing the $Setting prefix and adding the correct ValueType', () => {
 
-  let value = _.parseCustomSetting(`$Setup.SomeName`);
+  let types = _.parseCustomSetting(`$Setup.My_Setting__c.my_field__c`);
 
-  expect(value).toHaveProperty('instance','SomeName')
-  expect(value).toHaveProperty('type',ValueType.CUSTOM_SETTING);
+  let expected = [
+    {
+        type : ValueType.CUSTOM_FIELD,
+        instance:'My_Setting__c.my_field__c'
+    },
+    {
+        type : ValueType.CUSTOM_SETTING,
+        instance:'My_Setting__c'
+    }
+  ]
+
+  expect(types).toEqual(expect.arrayContaining(expected));
+
 })
 
 test('Object Types are determined by the $ObjectType prefix', () => {
@@ -197,9 +208,9 @@ test('The "removePrefix" function should remove the $ character' ,() => {
 
 test('Certain prefixes should be considered of a special type' ,() => {
 
-  expect(_.isSpecialPrefix('Organization')).toBe(true);
-  expect(_.isSpecialPrefix('PROfile')).toBe(true);
-  expect(_.isSpecialPrefix('ObjectType')).toBe(false);
+  expect(_.isSpecialPrefix('$Organization')).toBe(true);
+  expect(_.isSpecialPrefix('$PROfile')).toBe(true);
+  expect(_.isSpecialPrefix('$ObjectType')).toBe(false);
 
 })
 
