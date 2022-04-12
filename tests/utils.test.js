@@ -44,7 +44,7 @@ test('Whether a field is custom or standard is determined by whether the field e
 
 test('Custom fields should be returned with their original object as a prefix, and the correct ValueType',() =>{
 
-  let value = _.parseCustomField(`My_text_field__c`,'Account');
+  let value = _.createFieldInstance(`My_text_field__c`,'Account');
 
   expect(value).toHaveProperty('instance','Account.My_text_field__c')
   expect(value).toHaveProperty('type',ValueType.CUSTOM_FIELD);
@@ -54,7 +54,7 @@ test('Custom fields should be returned with their original object as a prefix, a
 
 test('Standard fields should be returned with their original object as a prefix, and the correct ValueType',() =>{
 
-  let value = _.parseStandardField(`Industry`,'Account');
+  let value = _.createFieldInstance(`Industry`,'Account');
 
   expect(value).toHaveProperty('instance','Account.Industry')
   expect(value).toHaveProperty('type',ValueType.STANDARD_FIELD);

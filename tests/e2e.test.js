@@ -146,14 +146,13 @@ test('Process Builder formula: e2e test', () => {
 })
 
 
-
 test('CPQ Support for SBQQ__Quote__c', () => {
 
-    let formula = `SBQQ__Distributor__r.Name `
-    let result = parse({object:'SBQQ__Quote__c',formula});
+    let formula = `SBQQ__DistriBUtor__r.Name `
+    let result = parse({object:'SBQQ__QuoTE__c',formula});
 
     let expectedCustomFields = [
-        'SBQQ__Quote__c.SBQQ__Distributor__c'
+        'SBQQ__QuoTE__c.SBQQ__DistriBUtor__c'
     ]
 
     expect(Array.from(result.customFields)).toEqual(expect.arrayContaining(expectedCustomFields)); 
@@ -167,5 +166,22 @@ test('CPQ Support for SBQQ__Quote__c', () => {
 })
 
 
+test('Unknown CPQ relationship should return the original name', () => {
 
+    let formula = `SBQQ__random__r.Name `
+    let result = parse({object:'SBQQ__QuoTE__c',formula});
+
+    let expectedCustomFields = [
+        'SBQQ__QuoTE__c.SBQQ__random__c'
+    ]
+
+    expect(Array.from(result.customFields)).toEqual(expect.arrayContaining(expectedCustomFields)); 
+
+    let expectedStandardFields = [
+        'SBQQ__random__r.Name'
+    ]
+
+    expect(Array.from(result.standardFields)).toEqual(expect.arrayContaining(expectedStandardFields)); 
+
+})
 

@@ -53,7 +53,7 @@ function parse({object,formula}){
 
         if(_.isFunction(value)){
 
-            functions.add(value.toUpperCase());
+            functions.add(_.up(value));
             clearWord();
             return;
         }
