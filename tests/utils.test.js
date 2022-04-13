@@ -105,10 +105,10 @@ test('The "transformToId" function should add "Id" at the end of the field name'
   expect(_.transformToId('Owner.Manager')).toBe('Owner.ManagerId');
 })
 
-test('The "transformToFieldName" function should replace __r with __c', () => {
-  expect(_.transformToFieldName('Owner.custom__r')).toBe('Owner.custom__c');
+test('The "replaceRwithC" function should replace __r with __c', () => {
+  expect(_.replaceRwithC('Owner.custom__r')).toBe('Owner.custom__c');
   //upper case
-  expect(_.transformToFieldName('Owner.custom__R')).toBe('Owner.custom__c');
+  expect(_.replaceRwithC('Owner.custom__R')).toBe('Owner.custom__c');
 })
 
 test('Custom Metadata is determined by the presence of the word __MDT anywhere in the field name', () => {
