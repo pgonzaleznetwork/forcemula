@@ -41,6 +41,8 @@ test('Standard formula: e2e test', () => {
 
     let result = parse({object:'Account',formula});
 
+    console.log(result)
+
    
 
     let expectedFunctions = [
