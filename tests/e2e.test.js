@@ -9,6 +9,19 @@ test('Single-field formula: e2e test', () => {
 
 })
 
+test('Comments should be ignored', () => {
+
+    let formula = `/*ISBLANK(Name)*/ TEXT(Industry)`
+    let result = parse({object:'Account',formula});
+
+    expect(Array.from(result.standardFields)).toEqual(expect.arrayContaining(['Account.Industry'])); 
+    expect(Array.from(result.standardFields)).not.toEqual(expect.arrayContaining(['Account.Name'])); 
+
+    expect(Array.from(result.functions)).toEqual(expect.arrayContaining(['TEXT'])); 
+    expect(Array.from(result.functions)).not.toEqual(expect.arrayContaining(['ISBLANK'])); 
+
+})
+
 
 
 test('Standard formula: e2e test', () => {
@@ -41,7 +54,7 @@ test('Standard formula: e2e test', () => {
 
     let result = parse({object:'Account',formula});
 
-    console.log(result)
+   console.log(result)
 
    
 
@@ -78,18 +91,18 @@ test('Standard formula: e2e test', () => {
 
     expect(Array.from(result.customFields)).toEqual(expect.arrayContaining(expectedCustomFields)); 
 
-    let expectedCustomMetadataTypes = [
+    let expectedcustomMetadataTypeRecords = [
         'Trigger_Context_Status__mdt.by_handler',
         'Trigger_Context_Status__mdt.by_class'
     ]
 
-    expect(Array.from(result.customMetadataTypes)).toEqual(expect.arrayContaining(expectedCustomMetadataTypes)); 
+    expect(Array.from(result.customMetadataTypeRecords)).toEqual(expect.arrayContaining(expectedcustomMetadataTypeRecords)); 
 
-    let unexpectedCustomMetadataTypes = [
+    let unexpectedcustomMetadataTypeRecords = [
         'SRM_API_Metadata_Client_Setting__mdt.Fields',
     ]
 
-    expect(Array.from(result.customMetadataTypes)).not.toEqual(expect.arrayContaining(unexpectedCustomMetadataTypes));
+    expect(Array.from(result.customMetadataTypeRecords)).not.toEqual(expect.arrayContaining(unexpectedcustomMetadataTypeRecords));
 
     let expectedCustomLabels = [
         'Details'
@@ -139,11 +152,11 @@ test('Process Builder formula: e2e test', () => {
 
     expect(Array.from(result.customFields)).toEqual(expect.arrayContaining(expectedCustomFields)); 
 
-    let expectedCustomMetadataTypes = [
+    let expectedcustomMetadataTypeRecords = [
         'Trigger_Context_Status__mdt.by_class'
     ]
 
-    expect(Array.from(result.customMetadataTypes)).toEqual(expect.arrayContaining(expectedCustomMetadataTypes)); 
+    expect(Array.from(result.customMetadataTypeRecords)).toEqual(expect.arrayContaining(expectedcustomMetadataTypeRecords)); 
 
 })
 

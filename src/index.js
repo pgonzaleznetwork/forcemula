@@ -13,17 +13,28 @@ function parse({object,formula}){
 
     let currentWord = '';
     let insideString = false;
+    let insideComment = false;
 
     chars.forEach((char,index,text) => {
 
         let isLastChar = (text.length-1 == index);
+
+        if(char == '/' && !isLastChar && _.isCommentStart(char+text[index+1])){
+            insideComment = true;
+            return;
+        }
+
+        if(char == '*' && !isLastChar && _.isCommentEnd(char+text[index+1])){
+            insideComment = false;
+            return;
+        }
 
         if(char == `"`){
             insideString = !insideString;
             return;
         }
 
-        if(!insideString){
+        if(!insideString && !insideComment){
 
             if(!_.isOperator(char)){
 
@@ -87,8 +98,13 @@ function organizeInstancesByType(types){
     let allTypes = {};
 
     types.forEach(t => {
-        if(allTypes[t.type.name]) allTypes[t.type.name].add(t.instance);
-        else  allTypes[t.type.name] = new Set([t.instance]);
+
+        if(allTypes[t.type.name]) {
+            allTypes[t.type.name].add(t.instance);
+        }
+        else { 
+            allTypes[t.type.name] = new Set([t.instance]);
+        }
     })
 
     let result = {}

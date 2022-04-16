@@ -232,7 +232,7 @@ test('Custom metadata fields should be parsed to both types and fields (custom f
             instance:'Trigger_Context_Status__mdt.Enable_After_Insert__c'
         },
         {
-            type : ValueType.CUSTOM_METADATA_TYPE,
+            type : ValueType.CUSTOM_METADATA_TYPE_RECORD,
             instance:'Trigger_Context_Status__mdt.SRM_Metadata_c'
         }
     ]
@@ -251,7 +251,7 @@ test('Custom metadata fields should be parsed to both types and fields (standard
             instance:'Trigger_Context_Status__mdt.QualifiedApiName'
         },
         {
-            type : ValueType.CUSTOM_METADATA_TYPE,
+            type : ValueType.CUSTOM_METADATA_TYPE_RECORD,
             instance:'Trigger_Context_Status__mdt.SRM_Metadata_c'
         }
     ]

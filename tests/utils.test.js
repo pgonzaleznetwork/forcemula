@@ -38,13 +38,13 @@ test('White space should be removed',() =>{
 })
 
 test('Whether a field is custom or standard is determined by whether the field ends with __c, irrespective of the case',() =>{
-  expect(_.isCustomField('Account__C')).toBe(true);
-  expect(_.isCustomField('AccountId')).toBe(false);
+  expect(_.isCustom('Account__C')).toBe(true);
+  expect(_.isCustom('AccountId')).toBe(false);
 })
 
 test('Custom fields should be returned with their original object as a prefix, and the correct ValueType',() =>{
 
-  let value = _.createFieldInstance(`My_text_field__c`,'Account');
+  let value = _.parseField(`My_text_field__c`,'Account');
 
   expect(value).toHaveProperty('instance','Account.My_text_field__c')
   expect(value).toHaveProperty('type',ValueType.CUSTOM_FIELD);
@@ -54,7 +54,7 @@ test('Custom fields should be returned with their original object as a prefix, a
 
 test('Standard fields should be returned with their original object as a prefix, and the correct ValueType',() =>{
 
-  let value = _.createFieldInstance(`Industry`,'Account');
+  let value = _.parseField(`Industry`,'Account');
 
   expect(value).toHaveProperty('instance','Account.Industry')
   expect(value).toHaveProperty('type',ValueType.STANDARD_FIELD);
@@ -122,7 +122,7 @@ test('Custom Metadata should be converted to both custom fields and metadata typ
   let field = '$CustomMetadata.Trigger_Context_Status__mdt.SRM_Metadata_c.Enable_After_Insert__c';
   let value = _.parseCustomMetadata(field)
 
-  expect(value.length).toBe(2);
+  expect(value.length).toBe(3);
 
   value.forEach(val => {
 
@@ -130,8 +130,12 @@ test('Custom Metadata should be converted to both custom fields and metadata typ
       expect(val.instance).toBe('Trigger_Context_Status__mdt.Enable_After_Insert__c')
     }
 
-    if(val.type == ValueType.CUSTOM_METADATA_TYPE){
+    if(val.type == ValueType.CUSTOM_METADATA_TYPE_RECORD){
       expect(val.instance).toBe('Trigger_Context_Status__mdt.SRM_Metadata_c')
+    }
+
+    if(val.type == ValueType.CUSTOM_METADATA_TYPE){
+      expect(val.instance).toBe('Trigger_Context_Status__mdt')
     }
 
   })    
