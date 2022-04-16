@@ -190,10 +190,22 @@ test('Object Types are determined by the $ObjectType prefix', () => {
 
 test('Object Types are parsed by removing the unnecessary prefixes and returning the field API name', () => {
 
-  let value = _.parseObjectType(`$ObjectType.Center__c.Fields.My_text_field__c`);
+  let types = _.parseObjectType(`$ObjectType.Center__c.Fields.My_text_field__c`);
 
-  expect(value).toHaveProperty('instance','Center__c.My_text_field__c')
-  expect(value).toHaveProperty('type',ValueType.CUSTOM_FIELD);
+  let expected = [
+    {
+      instance:'Center__c.My_text_field__c',
+      type:ValueType.CUSTOM_FIELD
+    },
+    {
+      instance:'Center__c',
+      type:ValueType.CUSTOM_OBJECT
+    }
+  ]
+
+  expect(types).toEqual(expect.arrayContaining(expected));
+
+ 
 })
 
 test('A field is considered a relationship field if there is a dot in between' ,() => {
@@ -232,4 +244,25 @@ test('The word "parent" in a custom field should determine that this is a parent
 
 })
 
+test('Parse object should determine if the object is standard or custom' ,() => {
+
+  let result = _.parseObject('Account');
+
+  let expected = {
+    instance:'Account',
+    type:ValueType.STANDARD_OBJECT
+  }
+
+  expect(result).toEqual(expected);
+
+  result = _.parseObject('Account__c');
+
+  expected = {
+    instance:'Account__c',
+    type:ValueType.CUSTOM_OBJECT
+  }
+
+  expect(result).toEqual(expected);
+
+})
 

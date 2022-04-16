@@ -12,6 +12,10 @@ test('Passing a single STANDARD field name should return the same field, but wit
             type : ValueType.STANDARD_FIELD,
             instance:'Account.Name'
         },
+        {
+            type : ValueType.STANDARD_OBJECT,
+            instance:'Account'
+        }
     ]
 
     expect(types).toEqual(expect.arrayContaining(expected));  
@@ -19,13 +23,17 @@ test('Passing a single STANDARD field name should return the same field, but wit
 
 test('Passing a single CUSTOM field name should return the same field, but with the original object as a prefix',() =>{
 
-    let types = parseType('custom__C',originalObject);
+    let types = parseType('custom__C','lead__c');
 
     let expected = [
         {
             type : ValueType.CUSTOM_FIELD,
-            instance:'Account.custom__C'
+            instance:'lead__c.custom__C'
         },
+        {
+            type : ValueType.CUSTOM_OBJECT,
+            instance:'lead__c'
+        }
     ]
 
     expect(types).toEqual(expect.arrayContaining(expected));  
@@ -39,6 +47,8 @@ test('Standard self-referential relationships should be converted back to their 
         'Opportunity.Account.Parent.Parent.Parent.Parent.pareNt.AccountNumber',
         'OpportunityLineItem'
     );
+
+    console.log(types)
 
     let expected = [
         {
