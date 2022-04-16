@@ -48,8 +48,6 @@ test('Standard self-referential relationships should be converted back to their 
         'OpportunityLineItem'
     );
 
-    console.log(types)
-
     let expected = [
         {
             type : ValueType.STANDARD_FIELD,
@@ -66,6 +64,19 @@ test('Standard self-referential relationships should be converted back to their 
         {
             type : ValueType.STANDARD_FIELD,
             instance:'Account.AccountNumber'
+        },
+        {
+            type : ValueType.STANDARD_OBJECT,
+            instance:'OpportunityLineItem'
+        }
+        ,
+        {
+            type : ValueType.STANDARD_OBJECT,
+            instance:'Opportunity'
+        },
+        {
+            type : ValueType.STANDARD_OBJECT,
+            instance:'Account'
         }
     ]
 
