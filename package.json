@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "test": "jest --silent=false --verbose --detectOpenHandles --coverage --watch"
+    "test": "jest --silent=false --verbose --detectOpenHandles --coverage",
+    "watch": "jest --silent=false --verbose --detectOpenHandles --coverage --watch"
   },
   "author": "Pablo Gonzalez",
   "license": "ISC",
