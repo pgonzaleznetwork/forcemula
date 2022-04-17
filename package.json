@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "test": "jest --silent=false --verbose --detectOpenHandles --coverage",
+    "test": "jest --silent=false  ",
     "watch": "jest --silent=false --verbose --detectOpenHandles --coverage --watch",
     "test:coverage":"jest --silent=false --verbose --detectOpenHandles --coverage && jest-coverage-badges"
   },
