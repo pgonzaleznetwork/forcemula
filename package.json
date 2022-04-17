@@ -6,11 +6,22 @@
   "scripts": {
     "start": "node src/index.js",
     "test": "jest --silent=false --verbose --detectOpenHandles --coverage",
-    "watch": "jest --silent=false --verbose --detectOpenHandles --coverage --watch"
+    "watch": "jest --silent=false --verbose --detectOpenHandles --coverage --watch",
+    "test:coverage":"jest --silent=false --verbose --detectOpenHandles --coverage && jest-coverage-badges"
   },
   "author": "Pablo Gonzalez",
   "license": "ISC",
   "devDependencies": {
     "jest": "^27.5.1"
+  },
+  "jest": {
+    "coverageReporters": [
+      "json-summary",
+      "text",
+      "lcov"
+    ]
+  },
+  "dependencies": {
+    "jest-coverage-badges": "^1.0.0"
   }
 }
