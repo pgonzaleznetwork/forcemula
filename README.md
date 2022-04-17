@@ -142,5 +142,30 @@ operators: [ '=', '&', '|' ]
 
 This can be used to calculate the complexity of a formula, sort formula fields by their operator, etc.
 
+### User-based fields
 
+All the user-based fields (even through parent-child relationships) are transformed to their API name, for example
 
+```mysql
+IF(Owner.Contact.CreatedBy.Manager.Profile.Id = "03d3h000000khEQ",TRUE,false)
+```
+
+results in the following 
+
+```javascript
+standardFields: [
+    'OpportunityLineItem.OwnerId',
+    'User.ContactId',
+    'User.ManagerId',
+    'User.ProfileId',
+    ...
+    ]
+```
+
+The following mapping took place
+
+```javascript
+Owner.Contact => User.ContactId
+CreatedBy.Manager => User.ManagerId
+Manager.ProfileId => User.ProfileId
+```
