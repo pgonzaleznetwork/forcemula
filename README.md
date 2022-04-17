@@ -169,3 +169,77 @@ Owner.Contact => User.ContactId
 CreatedBy.Manager => User.ManagerId
 Manager.ProfileId => User.ProfileId
 ```
+
+### Self-referential relationships
+
+Self-referential relationships, like Account > Parent > Parent; are transformed back to their original API name.
+
+For example
+
+```javascript
+Opportunity.Account.Parent.Parent.Parent.LastModifiedBy.Contact.AssistantName = "Marie"
+```
+
+results in the following
+
+```javascript
+standardFields: [
+    ...
+    'Opportunity.AccountId',
+    'Account.ParentId',
+    'Account.LastModifiedById',
+    ...
+]
+```
+
+We know that `Parent.LastModifiedBy` maps to `Account.LastModifiedById` because `Account` was the last known parent in the relationship.
+
+### Standard and custom fields
+
+Standard and custom fields are extracted, whether they belong to standard objects, custom objects, custom settings and custom metadata types. For example
+
+```
+Account.Name => Standard field on a standard object
+```
+
+```
+Account.Location__c => Custom field on a standard object
+```
+
+```
+Quote__c.Name => Standard field on a custom object
+```
+
+```
+Quote__c.Location__c => Custom field on a custom object
+```
+
+Repeat for Custom Settings and Custom Metadata Types. From the example at the top of this guide:
+
+```javascript
+ customFields: [
+    'Trigger_Context_Status__mdt.Enable_After_Insert__c',
+    'OpportunityLineItem.Opportunity__c',
+    'Center__c.My_text_field__c',
+    'Customer_Support_Setting__c.Email_Address__c'
+],
+```
+```javascript
+ customFields: [
+    'Trigger_Context_Status__mdt.Enable_After_Insert__c',
+    'OpportunityLineItem.Opportunity__c',
+    'Center__c.My_text_field__c',
+    'Customer_Support_Setting__c.Email_Address__c'
+],
+```
+
+
+ standardFields: [
+          'OpportunityLineItem.OwnerId',
+          'User.ContactId',
+          'Contact.CreatedById',
+          'User.ManagerId',
+          'User.ProfileId',
+          'Profile.Id',
+          'Trigger_Context_Status__mdt.DeveloperName',
+          'OpportunityLineItem.OpportunityId',
