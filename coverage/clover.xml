@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1650129574942" clover="3.2.0">
+  <project timestamp="1650129574942" name="All files">
+    <metrics statements="181" coveredstatements="179" conditionals="99" coveredconditionals="96" methods="49" coveredmethods="49" elements="329" coveredelements="324" complexity="0" loc="181" ncloc="181" packages="3" files="5" classes="5"/>
+    <package name="lib">
+      <metrics statements="126" coveredstatements="126" conditionals="65" coveredconditionals="64" methods="42" coveredmethods="42"/>
+      <file name="ValueTypes.js" path="/Users/pgonzalez/Documents/apps/sfdc-formula-parser/lib/ValueTypes.js">
+        <metrics statements="11" coveredstatements="11" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="1" count="3" type="stmt"/>
+        <line num="3" count="3" type="stmt"/>
+        <line num="4" count="3" type="stmt"/>
+        <line num="5" count="3" type="stmt"/>
+        <line num="6" count="3" type="stmt"/>
+        <line num="7" count="3" type="stmt"/>
+        <line num="8" count="3" type="stmt"/>
+        <line num="9" count="3" type="stmt"/>
+        <line num="10" count="3" type="stmt"/>
+        <line num="11" count="3" type="stmt"/>
+        <line num="14" count="27" type="stmt"/>
+      </file>
+      <file name="parseTypes.js" path="/Users/pgonzalez/Documents/apps/sfdc-formula-parser/lib/parseTypes.js">
+        <metrics statements="46" coveredstatements="46" conditionals="40" coveredconditionals="40" methods="3" coveredmethods="3"/>
+        <line num="1" count="2" type="stmt"/>
+        <line num="5" count="35" type="stmt"/>
+        <line num="9" count="35" type="cond" truecount="2" falsecount="0"/>
+        <line num="10" count="4" type="stmt"/>
+        <line num="13" count="31" type="cond" truecount="2" falsecount="0"/>
+        <line num="14" count="5" type="stmt"/>
+        <line num="17" count="26" type="cond" truecount="2" falsecount="0"/>
+        <line num="18" count="2" type="stmt"/>
+        <line num="21" count="24" type="cond" truecount="2" falsecount="0"/>
+        <line num="22" count="3" type="stmt"/>
+        <line num="25" count="21" type="cond" truecount="2" falsecount="0"/>
+        <line num="27" count="17" type="stmt"/>
+        <line num="29" count="17" type="stmt"/>
+        <line num="31" count="70" type="cond" truecount="4" falsecount="0"/>
+        <line num="33" count="64" type="stmt"/>
+        <line num="34" count="64" type="stmt"/>
+        <line num="36" count="64" type="cond" truecount="2" falsecount="0"/>
+        <line num="37" count="11" type="stmt"/>
+        <line num="41" count="53" type="stmt"/>
+        <line num="43" count="53" type="cond" truecount="2" falsecount="0"/>
+        <line num="44" count="2" type="stmt"/>
+        <line num="48" count="64" type="cond" truecount="4" falsecount="0"/>
+        <line num="49" count="8" type="stmt"/>
+        <line num="52" count="64" type="stmt"/>
+        <line num="54" count="64" type="cond" truecount="2" falsecount="0"/>
+        <line num="56" count="47" type="cond" truecount="2" falsecount="0"/>
+        <line num="57" count="36" type="stmt"/>
+        <line num="60" count="11" type="stmt"/>
+        <line num="64" count="64" type="cond" truecount="2" falsecount="0"/>
+        <line num="65" count="2" type="stmt"/>
+        <line num="68" count="64" type="cond" truecount="2" falsecount="0"/>
+        <line num="69" count="9" type="stmt"/>
+        <line num="72" count="64" type="cond" truecount="4" falsecount="0"/>
+        <line num="73" count="2" type="stmt"/>
+        <line num="76" count="62" type="cond" truecount="4" falsecount="0"/>
+        <line num="77" count="6" type="stmt"/>
+        <line num="80" count="64" type="stmt"/>
+        <line num="85" count="4" type="stmt"/>
+        <line num="90" count="68" type="stmt"/>
+        <line num="93" count="68" type="cond" truecount="2" falsecount="0"/>
+        <line num="95" count="64" type="stmt"/>
+        <line num="96" count="64" type="stmt"/>
+        <line num="100" count="4" type="stmt"/>
+        <line num="101" count="4" type="stmt"/>
+        <line num="105" count="35" type="stmt"/>
+        <line num="109" count="2" type="stmt"/>
+      </file>
+      <file name="utils.js" path="/Users/pgonzalez/Documents/apps/sfdc-formula-parser/lib/utils.js">
+        <metrics statements="69" coveredstatements="69" conditionals="25" coveredconditionals="24" methods="38" coveredmethods="38"/>
+        <line num="1" count="3" type="stmt"/>
+        <line num="2" count="3" type="stmt"/>
+        <line num="5" count="977" type="stmt"/>
+        <line num="6" count="3" type="stmt"/>
+        <line num="9" count="456" type="stmt"/>
+        <line num="10" count="204" type="stmt"/>
+        <line num="11" count="150" type="stmt"/>
+        <line num="15" count="3" type="stmt"/>
+        <line num="16" count="3" type="stmt"/>
+        <line num="18" count="7" type="stmt"/>
+        <line num="20" count="1157" type="cond" truecount="3" falsecount="0"/>
+        <line num="22" count="18" type="stmt"/>
+        <line num="24" count="108" type="stmt"/>
+        <line num="26" count="116" type="stmt"/>
+        <line num="28" count="23" type="stmt"/>
+        <line num="30" count="162" type="stmt"/>
+        <line num="32" count="72" type="stmt"/>
+        <line num="34" count="13" type="stmt"/>
+        <line num="36" count="100" type="stmt"/>
+        <line num="38" count="28" type="stmt"/>
+        <line num="40" count="26" type="stmt"/>
+        <line num="42" count="37" type="stmt"/>
+        <line num="44" count="73" type="stmt"/>
+        <line num="46" count="128" type="stmt"/>
+        <line num="48" count="66" type="stmt"/>
+        <line num="50" count="119" type="cond" truecount="2" falsecount="0"/>
+        <line num="52" count="64" type="cond" truecount="2" falsecount="0"/>
+        <line num="54" count="37" type="stmt"/>
+        <line num="56" count="3" type="stmt"/>
+        <line num="58" count="1095" type="cond" truecount="1" falsecount="1"/>
+        <line num="59" count="1095" type="stmt"/>
+        <line num="62" count="3" type="stmt"/>
+        <line num="64" count="62" type="cond" truecount="2" falsecount="0"/>
+        <line num="66" count="59" type="stmt"/>
+        <line num="69" count="13" type="stmt"/>
+        <line num="71" count="99" type="stmt"/>
+        <line num="73" count="3" type="stmt"/>
+        <line num="76" count="6" type="stmt"/>
+        <line num="78" count="6" type="stmt"/>
+        <line num="91" count="3" type="stmt"/>
+        <line num="93" count="3" type="stmt"/>
+        <line num="99" count="3" type="stmt"/>
+        <line num="101" count="4" type="stmt"/>
+        <line num="103" count="4" type="stmt"/>
+        <line num="112" count="3" type="stmt"/>
+        <line num="115" count="5" type="stmt"/>
+        <line num="117" count="5" type="stmt"/>
+        <line num="124" count="3" type="stmt"/>
+        <line num="126" count="85" type="cond" truecount="2" falsecount="0"/>
+        <line num="127" count="17" type="stmt"/>
+        <line num="130" count="85" type="stmt"/>
+        <line num="137" count="3" type="stmt"/>
+        <line num="139" count="75" type="stmt"/>
+        <line num="141" count="75" type="cond" truecount="2" falsecount="0"/>
+        <line num="142" count="8" type="stmt"/>
+        <line num="144" count="67" type="cond" truecount="2" falsecount="0"/>
+        <line num="145" count="1" type="stmt"/>
+        <line num="147" count="66" type="cond" truecount="2" falsecount="0"/>
+        <line num="148" count="10" type="stmt"/>
+        <line num="151" count="75" type="stmt"/>
+        <line num="158" count="70" type="cond" truecount="2" falsecount="0"/>
+        <line num="160" count="3" type="stmt"/>
+        <line num="162" count="3" type="stmt"/>
+        <line num="164" count="2" type="stmt"/>
+        <line num="166" count="2" type="stmt"/>
+        <line num="168" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="172" count="3" type="stmt"/>
+        <line num="190" count="3" type="stmt"/>
+        <line num="278" count="3" type="stmt"/>
+      </file>
+    </package>
+    <package name="lib.mappings">
+      <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="cpq.js" path="/Users/pgonzalez/Documents/apps/sfdc-formula-parser/lib/mappings/cpq.js">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="1" count="3" type="stmt"/>
+      </file>
+    </package>
+    <package name="src">
+      <metrics statements="54" coveredstatements="52" conditionals="34" coveredconditionals="32" methods="7" coveredmethods="7"/>
+      <file name="index.js" path="/Users/pgonzalez/Documents/apps/sfdc-formula-parser/src/index.js">
+        <metrics statements="54" coveredstatements="52" conditionals="34" coveredconditionals="32" methods="7" coveredmethods="7"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="7" count="6" type="stmt"/>
+        <line num="8" count="6" type="stmt"/>
+        <line num="9" count="6" type="stmt"/>
+        <line num="10" count="6" type="stmt"/>
+        <line num="12" count="6" type="stmt"/>
+        <line num="14" count="6" type="stmt"/>
+        <line num="15" count="6" type="stmt"/>
+        <line num="16" count="6" type="stmt"/>
+        <line num="18" count="6" type="stmt"/>
+        <line num="20" count="1114" type="stmt"/>
+        <line num="22" count="1114" type="cond" truecount="5" falsecount="0"/>
+        <line num="23" count="1" type="stmt"/>
+        <line num="24" count="1" type="stmt"/>
+        <line num="27" count="1113" type="cond" truecount="5" falsecount="0"/>
+        <line num="28" count="1" type="stmt"/>
+        <line num="29" count="1" type="stmt"/>
+        <line num="32" count="1112" type="cond" truecount="2" falsecount="0"/>
+        <line num="33" count="22" type="stmt"/>
+        <line num="34" count="22" type="stmt"/>
+        <line num="37" count="1090" type="cond" truecount="4" falsecount="0"/>
+        <line num="39" count="987" type="cond" truecount="2" falsecount="0"/>
+        <line num="41" count="882" type="stmt"/>
+        <line num="43" count="882" type="cond" truecount="2" falsecount="0"/>
+        <line num="44" count="3" type="stmt"/>
+        <line num="48" count="105" type="cond" truecount="1" falsecount="1"/>
+        <line num="50" count="105" type="cond" truecount="2" falsecount="0"/>
+        <line num="52" count="105" type="cond" truecount="4" falsecount="0"/>
+        <line num="53" count="53" type="stmt"/>
+        <line num="58" count="1090" type="stmt"/>
+        <line num="61" count="6" type="stmt"/>
+        <line num="65" count="56" type="cond" truecount="2" falsecount="0"/>
+        <line num="67" count="38" type="stmt"/>
+        <line num="68" count="38" type="stmt"/>
+        <line num="69" count="38" type="stmt"/>
+        <line num="72" count="18" type="cond" truecount="1" falsecount="1"/>
+        <line num="74" count="0" type="stmt"/>
+        <line num="75" count="0" type="stmt"/>
+        <line num="78" count="18" type="stmt"/>
+        <line num="81" count="18" type="stmt"/>
+        <line num="85" count="56" type="stmt"/>
+        <line num="88" count="6" type="stmt"/>
+        <line num="98" count="6" type="stmt"/>
+        <line num="100" count="6" type="stmt"/>
+        <line num="102" count="80" type="cond" truecount="2" falsecount="0"/>
+        <line num="103" count="53" type="stmt"/>
+        <line num="106" count="27" type="stmt"/>
+        <line num="110" count="6" type="stmt"/>
+        <line num="113" count="6" type="stmt"/>
+        <line num="114" count="27" type="stmt"/>
+        <line num="117" count="6" type="stmt"/>
+        <line num="120" count="1" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>
