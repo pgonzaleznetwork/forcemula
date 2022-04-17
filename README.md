@@ -1,6 +1,7 @@
 
+<img src="./img/logo.png">
 
-
+# Forcemula 
 
 <p align=center>
 
@@ -9,3 +10,5 @@
 		<img src="https://github.com/pgonzaleznetwork/forcemula/workflows/Tests/badge.svg?style=flat" />
 </a>
 </p>
+
+#### Salesforce formula parsing simplified
