@@ -1,6 +1,3 @@
  <img src="./coverage/badge-lines.svg">
 
-(https://github.com/pgonzaleznetwork/forcemula/actions/workflows/nodejs.yml/badge.svg)
-
-
-![example workflow] (.github/workflows/main.yml/badge.svg)
+[![Node.js CI](https://github.com/pgonzaleznetwork/forcemula/actions/workflows/nodejs.yaml/badge.svg)](https://github.com/pgonzaleznetwork/forcemula/actions/workflows/nodejs.yaml)
