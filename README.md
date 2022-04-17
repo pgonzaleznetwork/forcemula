@@ -12,7 +12,7 @@
 </a>
 </p>
 
-Parsing Salesforce formulas is easy if your formula looks like this
+Extracting the fields and objects out of a Salesforce formula is easy if your formula looks like this
 
 ```
 IF(ISPICKVAL(CustomerPriority__c,"High"),"Now","Later") 
@@ -20,37 +20,49 @@ IF(ISPICKVAL(CustomerPriority__c,"High"),"Now","Later")
 
 But what if your formula looks like this?
 
-```postgres 
+```mysql
 
 IF(Owner.Contact.CreatedBy.Manager.Profile.Id = "03d3h000000khEQ",TRUE,false)
 
-    &&
-    
-    IF(($CustomMetadata.Trigger_Context_Status__mdt.by_handler.Enable_After_Insert__c ||
-    
-      $CustomMetadata.Trigger_Context_Status__mdt.by_class.DeveloperName = "Default"),true,FALSE)
-    
-    &&
-    
-    IF( ($Label.Details = "Value" || Opportunity.Account.Parent.Parent.Parent.LastModifiedBy.Contact.AssistantName = "Marie"), true ,false)
+&&
 
-    &&
+IF(($CustomMetadata.Trigger_Context_Status__mdt.by_handler.Enable_After_Insert__c ||
 
-    IF( (Opportunity__r.Related_Asset__r.Name), true ,false)
-    
-    && IF ( ( $ObjectType.Center__c.Fields.My_text_field__c = "My_Text_Field__c") ,true,false)
-    
-    && IF ( ( $ObjectType.SRM_API_Metadata_Client_Setting__mdt.Fields.CreatedDate  = "My_Text_Field__c") ,true,false)
-    
-    && IF ( ( TEXT($Organization.UiSkin) = "lex" ) ,true,false)
-    
-    && IF ( ( $Setup.Customer_Support_Setting__c.Email_Address__c = "test@gmail.com" ) ,true,false)
-    
-    && IF ( (  $User.CompanyName = "acme" ) ,true,false)`
+    $CustomMetadata.Trigger_Context_Status__mdt.by_class.DeveloperName = "Default"),true,FALSE)
+
+&&
+
+IF( ($Label.Details = "Value" || Opportunity.Account.Parent.Parent.Parent.LastModifiedBy.Contact.AssistantName = "Marie"), true ,false)
+
+&&
+
+IF( (Opportunity__r.Related_Asset__r.Name), true ,false)
+
+&& IF ( ( $ObjectType.Center__c.Fields.My_text_field__c = "My_Text_Field__c") ,true,false)
+
+&& IF ( ( $ObjectType.SRM_API_Metadata_Client_Setting__mdt.Fields.CreatedDate  = "My_Text_Field__c") ,true,false)
+
+&& IF ( ( TEXT($Organization.UiSkin) = "lex" ) ,true,false)
+
+&& IF ( ( $Setup.Customer_Support_Setting__c.Email_Address__c = "test@gmail.com" ) ,true,false)
+
+&& IF ( (  $User.CompanyName = "acme" ) ,true,false)`
 
 ```
 
 For this, you need `forcemula`
+
+```javascript
+
+let parse = require('forcemula');
+
+let formulaText = getFromSalesforceApi(...);
+
+let result = parse({'OpportunityLineItem',formulaText});
+
+console.log(result);
+
+```
 
 ```javascript
 {
