@@ -1,5 +1,19 @@
 let parse = require('../src/index');
 
+test('An error should be thrown if any of the required parameters is missing', () => {
+
+    let formula = `Name`
+
+    expect(() => {
+        parse({formula});
+    }).toThrow('MISSING_PARAMETER');
+
+    expect(() => {
+        parse({object:'Account'});
+    }).toThrow('MISSING_PARAMETER');
+
+})
+
 test('Single-field formula: e2e test', () => {
 
     let formula = `Name`

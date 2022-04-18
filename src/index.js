@@ -4,6 +4,8 @@ let ValueType = require('../lib/ValueTypes');
 
 function parse({object,formula}){
 
+    if(!object || !formula) throw "MISSING_PARAMETER"
+
     let functions = new Set();
     let operators = new Set();
     let types = [];
