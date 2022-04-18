@@ -22,7 +22,7 @@ It can be used by Salesforce ISVs and DevOps vendors for multiple use cases such
 * Deployment auto-suggestion (i.e suggesting missing fields when deploying a formula to a target environment)
 * Any other use case where it is necessary to known what metadata a formula depends on
 
-`forcemula` does <mark>**not**</mark> the Salesforce API. All the parsing is done by evaluating the text representation of a formula in Salesforce. 
+`forcemula` does <mark>**not**</mark> the Salesforce API and has zero dependencies. All the parsing is done by evaluating the text representation of a formula in Salesforce. 
 
 This makes it easy and safe to plug it into your existing product. 
 
@@ -64,20 +64,39 @@ IF((Opportunity__r.Related_Asset__r.Name), true ,false)
 
 && IF (( $User.CompanyName = "acme" ) ,true,false)`
 
+
+
 ```
 
+### Quick start and example
+
 `forcemula` makes extracting metadata a breeze: 
+
+```javascript
+npm install forcemula
+```
+
+
 
 ```javascript
 
 let parse = require('forcemula');
 
+//use jsforce, tooling API, etc to get the actual formula body
 let formulaText = getFromSalesforceApi(...);
+```
 
-let result = parse({'OpportunityLineItem',formulaText});
+```javascript
+
+let parseRequest = {
+    //this is the object that the formula belongs to
+    object:'OpportunityLineItem',
+    formula:formulaText
+}
+
+let result = parse(parseRequest);
 
 console.log(result);
-
 ```
 
 ```javascript
@@ -318,3 +337,64 @@ Additionally, the custom relationship will be added to the `unknownRelationships
  ```
 
 You must use the Salesforce API to figure out the real object behind this relationship. 
+
+### Process Builder formulas
+
+Process Builder formulas have a different syntax than regular formulas. Mainly, the base object is included in the syntax itself, along with extra brackets, for example
+
+```mysql
+IF([Account].Owner.Manager.Contact.Account.AccountNumber  = "text" ,TRUE,FALSE)
+```
+
+`forcemula` is aware of this and it will automatically remove any extra characters. So the above example results in:
+
+```javascript
+expectedStandardFields = [
+    'Account.OwnerId',
+    'User.ManagerId',
+    'User.ContactId',
+    'Contact.AccountId',
+    'Account.AccountNumber'
+]
+```
+
+### Comments
+
+Did you know you can add comments in Salesforce formulas? The following is valid formula syntax
+
+
+
+```mysql
+/*this is a comment ISPICKVAL(Industry,"Cars")*/
+
+IF(Owner.ManagerId = NULL,TRUE,FALSE)
+```
+
+`forcemula` automatically filters this out so `Account.Industry` is **not** returned as a standard field:
+
+```javascript
+expectedStandardFields = [
+    'Account.OwnerId',
+    'User.ManagerId'
+]
+
+```
+
+### Objects, custom labels and custom settings
+
+Standard objects, custom objects, custom labels and custom settings are also returned
+```
+standardObjects: [
+    'OpportunityLineItem',
+    'User',
+    'Contact',
+    'Profile',
+    'Opportunity',
+    'Account',
+    'Organization'
+]
+
+customLabels: [ 'Details' ],
+customObjects: [ 'Center__c' ],
+customSettings: [ 'Customer_Support_Setting__c' ]
+```
