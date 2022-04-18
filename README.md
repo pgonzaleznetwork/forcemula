@@ -22,6 +22,10 @@ It can be used by Salesforce ISVs and DevOps vendors for multiple use cases such
 * Deployment auto-suggestion (i.e suggesting missing fields when deploying a formula to a target environment)
 * Any other use case where it is necessary to known what metadata a formula depends on
 
+`forcemula` does <mark>**not**</mark> the Salesforce API. All the parsing is done by evaluating the text representation of a formula in Salesforce. 
+
+This makes it easy and safe to plug it into your existing product. 
+
 ### Why should I use this?
 
 Extracting the fields and objects out of a Salesforce formula is easy if your formula looks like this
@@ -222,24 +226,95 @@ Repeat for Custom Settings and Custom Metadata Types. From the example at the to
     'OpportunityLineItem.Opportunity__c',
     'Center__c.My_text_field__c',
     'Customer_Support_Setting__c.Email_Address__c'
-],
+]
 ```
+```javascript
+ standardFields: [
+    ...
+    'Trigger_Context_Status__mdt.DeveloperName',
+    'OpportunityLineItem.OpportunityId'
+ ]
+```
+### $ObjectType fields
+
+The $ObjectType fields are transformed back to their API name. For example
+
+```mysql
+$ObjectType.SRM_API_Metadata_Client_Setting__mdt.Fields.CreatedDate
+```
+becomes:
+
+```javascript
+standardFields: [
+    ...
+    'SRM_API_Metadata_Client_Setting__mdt.CreatedDate',
+    ]
+```
+
+### Custom Metadata Types
+
+Custom metadata types are transformed to 3 different types. For example
+
+```mysql
+$CustomMetadata.Trigger_Context_Status__mdt.by_handler.Enable_After_Insert__c
+````
+
+becomes:
+
 ```javascript
  customFields: [
     'Trigger_Context_Status__mdt.Enable_After_Insert__c',
-    'OpportunityLineItem.Opportunity__c',
-    'Center__c.My_text_field__c',
-    'Customer_Support_Setting__c.Email_Address__c'
-],
+    ...
+]
+```
+```javascript
+customMetadataTypeRecords: [
+        'Trigger_Context_Status__mdt.by_handler',
+        'Trigger_Context_Status__mdt.by_class'
+    ],
+customMetadataTypes: [
+        'Trigger_Context_Status__mdt'
+    ],
 ```
 
+### Standard relationship fields
 
+Standard relationship fields are transformed back to their original API name. For example:
+
+```mysql
+Opportunity.Account.Name
+````
+
+becomes:
+
+```javascript
  standardFields: [
-          'OpportunityLineItem.OwnerId',
-          'User.ContactId',
-          'Contact.CreatedById',
-          'User.ManagerId',
-          'User.ProfileId',
-          'Profile.Id',
-          'Trigger_Context_Status__mdt.DeveloperName',
-          'OpportunityLineItem.OpportunityId',
+    'Opportunity.AccountId',
+    ...
+]
+```
+### Custom relationship fields
+
+Becomes `forcemula` does not use the Salesforce API to parse formulas (everything is done with the pure text representation of the formula), custom relationships are  <mark>**not transformed**</mark> back to their original API name. 
+
+For example:
+
+```mysql
+Opportunity.Original_Account__r.Name
+````
+
+becomes:
+
+```javascript
+customFields: [
+    'Original_Account__r.Name',
+]
+```
+
+Additionally, the custom relationship will be added to the `unknownRelationships` array
+
+```javascript
+ unknownRelationships: [ 'Original_Account__r']
+ ```
+
+You must use the Salesforce API to figure out the real object behind this relationship. 
