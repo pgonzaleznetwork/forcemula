@@ -26,6 +26,24 @@ It can be used by Salesforce ISVs and DevOps vendors for multiple use cases such
 
 This makes it easy and safe to plug it into your existing product. 
 
+## Contents
+
+* [Why should I use this?](#why-should-i-use-this)
+* [Quick start and example](#quick-start-and-example)
+* [Functions and Operators](##functions-and-operators)
+* [User-based fields](#user-based-fields)
+* [Self-referential relationships](#self-referential-relationships)
+* [Standard and Custom fields](#standard-and-custom-fields)
+* [$ObjectType fields](#objecttype-fields)
+* [Custom Metadata Types](#custom-metadata-types)
+* [Standard relationship fields](#standard-relationship-fields)
+* [Custom relationship fields](#custom-relationship-fields)
+* [Process Builder formulas](#process-builder-formulas)
+* [Comments](#comments)
+* [Objects, custom labels and custom settings](#objects-custom-labels-and-custom-settings)
+* [Special support for CPQ](#special-support-for-cpq)
+
+
 ### Why should I use this?
 
 Extracting the fields and objects out of a Salesforce formula is easy if your formula looks like this
@@ -398,3 +416,11 @@ customLabels: [ 'Details' ],
 customObjects: [ 'Center__c' ],
 customSettings: [ 'Customer_Support_Setting__c' ]
 ```
+
+### Special support for CPQ
+
+Because CPQ is largely the same across all subscriber orgs, `forcemula` has special support for custom relationship fields that belong to the `SBQQ__` namespace.
+
+For example, across all subscriber orgs, the `SBQQ__Quote__c.SBQQ__Distributor__r` field is a lookup field to the `Account` object. This is not an editable attribute of the field (because it belongs to a mananaged package) so we can safely make this assumption in all scenarios.
+
+This is supported across multiple CPQ objects and support all of them will be completed in the future. You can see the entire mapping [here](https://github.com/pgonzaleznetwork/forcemula/blob/main/lib/mappings/cpq.js). 
