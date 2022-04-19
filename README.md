@@ -22,7 +22,7 @@ It can be used by Salesforce ISVs and DevOps vendors for multiple use cases such
 * Deployment auto-suggestion (i.e suggesting missing fields when deploying a formula to a target environment)
 * Any other use case where it is necessary to known what metadata a formula depends on
 
-`forcemula` does <mark>**not**</mark> the Salesforce API and has zero dependencies. All the parsing is done by evaluating the text representation of a formula in Salesforce. 
+`forcemula` does <mark>**not**</mark> use the Salesforce API and has zero dependencies. Instead, all the parsing is done by evaluating the text representation of a formula in Salesforce. 
 
 This makes it easy and safe to plug it into your existing product. 
 
@@ -170,7 +170,7 @@ console.log(result);
       }
 ```
 
-There's a lot going on here so let's go through it one by one:
+A lot going on here, so let's go through it one by one:
 
 ### Functions and Operators
 
@@ -332,7 +332,7 @@ becomes:
 ```
 ### Custom relationship fields
 
-Becomes `forcemula` does not use the Salesforce API to parse formulas (everything is done with the pure text representation of the formula), custom relationships are  <mark>**not transformed**</mark> back to their original API name. 
+Because `forcemula` does not use the Salesforce API to parse formulas (everything is done with the pure text representation of the formula), custom relationships are  <mark>**not transformed**</mark> back to their original API name. 
 
 For example:
 
@@ -392,7 +392,7 @@ IF(Owner.ManagerId = NULL,TRUE,FALSE)
 
 ```javascript
 expectedStandardFields = [
-    'Account.OwnerId',
+    'Account.OwnerId', 
     'User.ManagerId'
 ]
 
