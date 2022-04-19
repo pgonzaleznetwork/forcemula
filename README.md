@@ -424,3 +424,7 @@ Because CPQ is largely the same across all subscriber orgs, `forcemula` has spec
 For example, across all subscriber orgs, the `SBQQ__Quote__c.SBQQ__Distributor__r` field is a lookup field to the `Account` object. This is not an editable attribute of the field (because it belongs to a mananaged package) so we can safely make this assumption in all scenarios.
 
 This is supported across multiple CPQ objects and support all of them will be completed in the future. You can see the entire mapping [here](https://github.com/pgonzaleznetwork/forcemula/blob/main/lib/mappings/cpq.js). 
+
+**LICENSE**
+
+[MIT](https://github.com/pgonzaleznetwork/forcemula/blob/main/LICENSE)
