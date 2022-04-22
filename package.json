@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/index.js",
     "test": "jest --silent=false  ",
-    "watch": "jest --silent=false --verbose --detectOpenHandles --coverage --watch",
+    "watch": "jest --silent=false --verbose --detectOpenHandles --coverage --watchAll",
     "test:coverage":"jest --silent=false --verbose --detectOpenHandles --coverage && jest-coverage-badges"
   },
   "author": "Pablo Gonzalez",

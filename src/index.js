@@ -1,5 +1,6 @@
 let parseType = require('../lib/parseTypes');
 let _ = require('../lib/utils');
+let check = require('../lib/parser/grammarChecks')
 let ValueType = require('../lib/ValueTypes');
 
 function parse({object,formula}){
@@ -21,12 +22,12 @@ function parse({object,formula}){
 
         let isLastChar = (text.length-1 == index);
 
-        if(char == '/' && !isLastChar && _.isCommentStart(char+text[index+1])){
+        if(char == '/' && !isLastChar && check.isCommentStart(char+text[index+1])){
             insideComment = true;
             return;
         }
 
-        if(char == '*' && !isLastChar && _.isCommentEnd(char+text[index+1])){
+        if(char == '*' && !isLastChar && check.isCommentEnd(char+text[index+1])){
             insideComment = false;
             return;
         }
@@ -38,7 +39,7 @@ function parse({object,formula}){
 
         if(!insideString && !insideComment){
 
-            if(!_.isOperator(char)){
+            if(!check.isOperator(char)){
 
                 currentWord += char;  
 
@@ -47,9 +48,9 @@ function parse({object,formula}){
                 }
             }
 
-            else if(_.isOperator(char)) {
+            else if(check.isOperator(char)) {
                 
-                if(_.isInterestingOperator(char)) operators.add(char)
+                if(check.isInterestingOperator(char)) operators.add(char)
                 
                 if(currentWord != '' && currentWord.length > 1 ){  
                     determineType(currentWord);
@@ -64,14 +65,14 @@ function parse({object,formula}){
 
     function determineType(value){
 
-        if(_.isFunction(value)){
+        if(check.isFunction(value)){
 
-            functions.add(_.up(value));
+            functions.add(_.$(value));
             clearWord();
             return;
         }
 
-        else if(_.isNumber(value)){
+        else if(check.isNumber(value)){
 
             clearWord();
             return;
