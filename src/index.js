@@ -1,7 +1,7 @@
 let parseType = require('../lib/parseTypes');
 let _ = require('../lib/utils');
 let check = require('../lib/parser/grammarChecks')
-let ValueType = require('../lib/ValueTypes');
+let MetadataType = require('../lib/MetadataTypes');
 
 function parse({object,formula}){
 

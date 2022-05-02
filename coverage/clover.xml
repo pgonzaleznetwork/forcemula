@@ -4,7 +4,7 @@
     <metrics statements="181" coveredstatements="179" conditionals="99" coveredconditionals="96" methods="49" coveredmethods="49" elements="329" coveredelements="324" complexity="0" loc="181" ncloc="181" packages="3" files="5" classes="5"/>
     <package name="lib">
       <metrics statements="126" coveredstatements="126" conditionals="65" coveredconditionals="64" methods="42" coveredmethods="42"/>
-      <file name="ValueTypes.js" path="/Users/pgonzalez/Documents/apps/sfdc-formula-parser/lib/ValueTypes.js">
+      <file name="MetadataTypes.js" path="/Users/pgonzalez/Documents/apps/sfdc-formula-parser/lib/MetadataTypes.js">
         <metrics statements="11" coveredstatements="11" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
         <line num="1" count="3" type="stmt"/>
         <line num="3" count="3" type="stmt"/>

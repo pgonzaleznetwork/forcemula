@@ -1,5 +1,5 @@
 let parseType = require('../lib/parseTypes');
-const ValueType = require('../lib/ValueTypes');
+const MetadataType = require('../lib/MetadataTypes');
 let originalObject = 'Account';
 
 
@@ -9,11 +9,11 @@ test('Passing a single STANDARD field name should return the same field, but wit
 
     let expected = [
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'Account.Name'
         },
         {
-            type : ValueType.STANDARD_OBJECT,
+            type : MetadataType.STANDARD_OBJECT,
             instance:'Account'
         }
     ]
@@ -27,11 +27,11 @@ test('Passing a single CUSTOM field name should return the same field, but with 
 
     let expected = [
         {
-            type : ValueType.CUSTOM_FIELD,
+            type : MetadataType.CUSTOM_FIELD,
             instance:'lead__c.custom__C'
         },
         {
-            type : ValueType.CUSTOM_OBJECT,
+            type : MetadataType.CUSTOM_OBJECT,
             instance:'lead__c'
         }
     ]
@@ -50,32 +50,32 @@ test('Standard self-referential relationships should be converted back to their 
 
     let expected = [
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'OpportunityLineItem.OpportunityId'
         },
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'Opportunity.AccountId'
         },
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'Account.ParentId'
         },
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'Account.AccountNumber'
         },
         {
-            type : ValueType.STANDARD_OBJECT,
+            type : MetadataType.STANDARD_OBJECT,
             instance:'OpportunityLineItem'
         }
         ,
         {
-            type : ValueType.STANDARD_OBJECT,
+            type : MetadataType.STANDARD_OBJECT,
             instance:'Opportunity'
         },
         {
-            type : ValueType.STANDARD_OBJECT,
+            type : MetadataType.STANDARD_OBJECT,
             instance:'Account'
         }
     ]
@@ -91,15 +91,15 @@ test('STANDARD relationships should be converted to their original field name',(
 
     let expected = [
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'Contact.AccountId'
         },
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'Account.OpportunityId'
         },
         {
-            type : ValueType.CUSTOM_FIELD,
+            type : MetadataType.CUSTOM_FIELD,
             instance:'Opportunity.Custom__c'
         }
     ]
@@ -115,15 +115,15 @@ test('CUSTOM relationships should be converted to their original field name',() 
 
     let expected = [
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'Contact.AccountId'
         },
         {
-            type : ValueType.CUSTOM_FIELD,
+            type : MetadataType.CUSTOM_FIELD,
             instance:'Account.Opportunity__c'
         },
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'Opportunity__r.Name'
         }
     ]
@@ -139,23 +139,23 @@ test('A mix of custom and standard relationships should result in the same conve
 
     let expected = [
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'Lead.AccountId'
         },
         {
-            type : ValueType.CUSTOM_FIELD,
+            type : MetadataType.CUSTOM_FIELD,
             instance:'Account.Opportunity__c'
         },
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'Opportunity__r.AssetId'
         },
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'Asset.ContactId'
         },
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'Contact.FirstName'
         }
     ]
@@ -172,28 +172,28 @@ test('A chain of custom relationships should be supported',() =>{
 
     let expected = [
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'Order.AccountId'
         },
         {
-            type : ValueType.CUSTOM_FIELD,
+            type : MetadataType.CUSTOM_FIELD,
             instance:'Account.first__c'
         },
         {
-            type : ValueType.CUSTOM_FIELD,
+            type : MetadataType.CUSTOM_FIELD,
             instance:'first__r.second__c'
         },
         {
-            type : ValueType.CUSTOM_FIELD,
+            type : MetadataType.CUSTOM_FIELD,
             instance:'second__r.third__c'
         },
         {
-            type : ValueType.CUSTOM_FIELD,
+            type : MetadataType.CUSTOM_FIELD,
             instance:'third__r.fourth__c'
         }
         ,
         {
-            type : ValueType.CUSTOM_FIELD,
+            type : MetadataType.CUSTOM_FIELD,
             instance:'third__r.fourth__c'
         }
     ]
@@ -211,28 +211,28 @@ test('User-related fields should be transformed to User.[field]', () => {
 
    let expected = [
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'Order.AccountId'
         },
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'Account.OwnerId'
         },
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'User.ContactId'
         },
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'Contact.AccountId'
         },
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'Account.LastModifiedById'
         }
         ,
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'User.Department'
         }
     ]
@@ -249,11 +249,11 @@ test('Custom metadata fields should be parsed to both types and fields (custom f
 
     let expected = [
         {
-            type : ValueType.CUSTOM_FIELD,
+            type : MetadataType.CUSTOM_FIELD,
             instance:'Trigger_Context_Status__mdt.Enable_After_Insert__c'
         },
         {
-            type : ValueType.CUSTOM_METADATA_TYPE_RECORD,
+            type : MetadataType.CUSTOM_METADATA_TYPE_RECORD,
             instance:'Trigger_Context_Status__mdt.SRM_Metadata_c'
         }
     ]
@@ -268,11 +268,11 @@ test('Custom metadata fields should be parsed to both types and fields (standard
 
     let expected = [
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'Trigger_Context_Status__mdt.QualifiedApiName'
         },
         {
-            type : ValueType.CUSTOM_METADATA_TYPE_RECORD,
+            type : MetadataType.CUSTOM_METADATA_TYPE_RECORD,
             instance:'Trigger_Context_Status__mdt.SRM_Metadata_c'
         }
     ]
@@ -289,11 +289,11 @@ test('Custom Settings should be parsed as both a type and a field instance', () 
 
     let expected = [
         {
-            type : ValueType.CUSTOM_FIELD,
+            type : MetadataType.CUSTOM_FIELD,
             instance:'Customer_Support_Setting__c.Email_Address__c'
         },
         {
-            type : ValueType.CUSTOM_SETTING,
+            type : MetadataType.CUSTOM_SETTING,
             instance:'Customer_Support_Setting__c'
         }
     ]
@@ -306,11 +306,11 @@ test('Custom Settings should be parsed as both a type and a field instance', () 
 
     expected = [
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'Customer_Support_Setting__c.DeveloperName'
         },
         {
-            type : ValueType.CUSTOM_SETTING,
+            type : MetadataType.CUSTOM_SETTING,
             instance:'Customer_Support_Setting__c'
         }
     ]
@@ -325,7 +325,7 @@ test('Custom Labels should be parsed to their API name', () => {
 
     let expected = [
         {
-            type : ValueType.CUSTOM_LABEL,
+            type : MetadataType.CUSTOM_LABEL,
             instance:'AWS_Access_Key'
         }
     ]
@@ -334,7 +334,7 @@ test('Custom Labels should be parsed to their API name', () => {
 
     let notExpected = [
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'Case.LabelId'
         }
     ]
@@ -349,7 +349,7 @@ test('Object Types should be parsed to their API name (standard fields)', () => 
 
     let expected = [
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'Center__c.CreatedDate'
         }
     ]
@@ -358,7 +358,7 @@ test('Object Types should be parsed to their API name (standard fields)', () => 
 
     let notExpected = [
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'Case.ObjectTypeId'
         }
     ]
@@ -373,7 +373,7 @@ test('Object Types should be parsed to their API name (custom fields)', () => {
 
     let expected = [
         {
-            type : ValueType.CUSTOM_FIELD,
+            type : MetadataType.CUSTOM_FIELD,
             instance:'Center__c.Custom__c'
         }
     ]
@@ -382,7 +382,7 @@ test('Object Types should be parsed to their API name (custom fields)', () => {
 
     let notExpected = [
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'Case.ObjectTypeId'
         }
     ]
@@ -399,11 +399,11 @@ test(`The $ prefix should be removed from special objects and
 
     let expected = [
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'User.ManagerId'
         },
         {
-            type : ValueType.CUSTOM_FIELD,
+            type : MetadataType.CUSTOM_FIELD,
             instance:'User.Employee_Id__c'
         }
     ]
@@ -412,7 +412,7 @@ test(`The $ prefix should be removed from special objects and
 
     let notExpected = [
         {
-            type:ValueType.STANDARD_FIELD,
+            type:MetadataType.STANDARD_FIELD,
             instance:'Case.UserId'
         }
     ]
@@ -425,7 +425,7 @@ test(`The $ prefix should be removed from special objects and
 
     expected = [
         {
-            type : ValueType.STANDARD_FIELD,
+            type : MetadataType.STANDARD_FIELD,
             instance:'Organization.TimeZone'
         }
     ]
@@ -434,7 +434,7 @@ test(`The $ prefix should be removed from special objects and
 
     notExpected = [
         {
-            type:ValueType.STANDARD_FIELD,
+            type:MetadataType.STANDARD_FIELD,
             instance:'Case.OrganizationId'
         }
     ]

@@ -68,10 +68,6 @@ test('Standard formula: e2e test', () => {
 
     let result = parse({object:'OpportunityLineItem',formula});
 
-   console.log(result)
-
-   
-
     let expectedFunctions = [
         'IF','TRUE','FALSE','TEXT'
     ]
