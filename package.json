@@ -12,7 +12,8 @@
   "author": "Pablo Gonzalez",
   "license": "ISC",
   "devDependencies": {
-    "jest": "^27.5.1"
+    "jest": "^27.5.1",
+     "jest-coverage-badges": "^1.0.0"
   },
   "jest": {
     "coverageReporters": [
@@ -20,8 +21,5 @@
       "text",
       "lcov"
     ]
-  },
-  "dependencies": {
-    "jest-coverage-badges": "^1.0.0"
   }
 }
