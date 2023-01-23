@@ -3,7 +3,7 @@ let _ = require('../lib/utils');
 let check = require('../lib/parser/grammarChecks')
 let MetadataType = require('../lib/MetadataTypes');
 
-function parse({object,formula}){
+function parse(object,formula){
 
     if(!object || !formula) throw "MISSING_PARAMETER"
 

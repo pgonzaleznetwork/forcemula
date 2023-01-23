@@ -5,11 +5,11 @@ test('An error should be thrown if any of the required parameters is missing', (
     let formula = `Name`
 
     expect(() => {
-        parse({formula});
+        parse(formula);
     }).toThrow('MISSING_PARAMETER');
 
     expect(() => {
-        parse({object:'Account'});
+        parse('Account');
     }).toThrow('MISSING_PARAMETER');
 
 })
@@ -17,7 +17,7 @@ test('An error should be thrown if any of the required parameters is missing', (
 test('Single-field formula: e2e test', () => {
 
     let formula = `Name`
-    let result = parse({object:'Account',formula});
+    let result = parse('Account',formula);
 
     expect(Array.from(result.standardFields)).toEqual(expect.arrayContaining(['Account.Name'])); 
 
@@ -26,7 +26,7 @@ test('Single-field formula: e2e test', () => {
 test('Comments should be ignored', () => {
 
     let formula = `/*ISBLANK(Name)*/ TEXT(Industry)`
-    let result = parse({object:'Account',formula});
+    let result = parse('Account',formula);
 
     expect(Array.from(result.standardFields)).toEqual(expect.arrayContaining(['Account.Industry'])); 
     expect(Array.from(result.standardFields)).not.toEqual(expect.arrayContaining(['Account.Name'])); 
@@ -66,7 +66,7 @@ test('Standard formula: e2e test', () => {
     
     && IF ( (  $User.CompanyName = "acme" ) ,true,false)`
 
-    let result = parse({object:'OpportunityLineItem',formula});
+    let result = parse('OpportunityLineItem',formula);
 
     let expectedFunctions = [
         'IF','TRUE','FALSE','TEXT'
@@ -175,7 +175,7 @@ test('Process Builder formula: e2e test', () => {
 
         IF($CustomMetadata.Trigger_Context_Status__mdt.by_class.Enable_After_Delete__c , TRUE,FALse)`
 
-    let result = parse({object:'Account',formula});
+    let result = parse('Account',formula);
 
     let expectedStandardFields = [
         'Account.OwnerId',
@@ -207,7 +207,7 @@ test('Process Builder formula: e2e test', () => {
 test('CPQ Support for SBQQ__Quote__c', () => {
 
     let formula = `SBQQ__DistriBUtor__r.Name `
-    let result = parse({object:'SBQQ__QuoTE__c',formula});
+    let result = parse('SBQQ__QuoTE__c',formula);
 
     let expectedCustomFields = [
         'SBQQ__QuoTE__c.SBQQ__DistriBUtor__c'
@@ -227,7 +227,7 @@ test('CPQ Support for SBQQ__Quote__c', () => {
 test('Unknown CPQ relationship should return the original name', () => {
 
     let formula = `SBQQ__random__r.Name `
-    let result = parse({object:'SBQQ__QuoTE__c',formula});
+    let result = parse('SBQQ__QuoTE__c',formula);
 
     let expectedCustomFields = [
         'SBQQ__QuoTE__c.SBQQ__random__c'
