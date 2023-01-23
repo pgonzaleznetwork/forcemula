@@ -3,7 +3,7 @@ let _ = require('../lib/utils');
 let check = require('../lib/parser/grammarChecks')
 let MetadataType = require('../lib/MetadataTypes');
 
-function parse(object,formula){
+function parse(object:string,formula:string){
 
     if(!object || !formula) throw "MISSING_PARAMETER"
 
@@ -18,7 +18,7 @@ function parse(object,formula){
     let insideString = false;
     let insideComment = false;
 
-    chars.forEach((char,index,text) => {
+    chars.forEach((char:string,index:number,text:string) => {
 
         let isLastChar = (text.length-1 == index);
 
