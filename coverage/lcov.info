@@ -1,5 +1,5 @@
 TN:
-SF:lib/MetadataTypes.js
+SF:lib/MetadataTypes.ts
 FN:13,(anonymous_0)
 FNF:1
 FNH:1
@@ -21,7 +21,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:lib/parseTypes.js
+SF:lib/parseTypes.ts
 FN:5,parseType
 FN:31,(anonymous_1)
 FN:90,parseField
@@ -124,7 +124,7 @@ BRF:40
 BRH:40
 end_of_record
 TN:
-SF:lib/utils.js
+SF:lib/utils.ts
 FN:2,(anonymous_0)
 FN:3,(anonymous_1)
 FN:4,(anonymous_2)
@@ -149,7 +149,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:lib/mappings/cpq.js
+SF:lib/mappings/cpq.ts
 FNF:0
 FNH:0
 DA:1,3
@@ -159,7 +159,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:lib/parser/grammar.js
+SF:lib/parser/grammar.ts
 FNF:0
 FNH:0
 DA:1,4
@@ -189,7 +189,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:lib/parser/grammarChecks.js
+SF:lib/parser/grammarChecks.ts
 FN:4,(anonymous_0)
 FN:5,(anonymous_1)
 FN:7,(anonymous_2)
@@ -279,7 +279,7 @@ BRF:11
 BRH:10
 end_of_record
 TN:
-SF:lib/parser/transformations.js
+SF:lib/parser/transformations.ts
 FN:7,(anonymous_0)
 FN:9,(anonymous_1)
 FN:11,(anonymous_2)
@@ -368,7 +368,7 @@ BRF:14
 BRH:14
 end_of_record
 TN:
-SF:src/index.js
+SF:src/index.ts
 FN:6,parse
 FN:21,(anonymous_1)
 FN:66,determineType
