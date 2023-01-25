@@ -67,7 +67,7 @@ function parse({object,formula}){
 
         if(check.isFunction(value)){
 
-            functions.add(_.$(value))
+            functions.add(_.upper(value))
             clearWord();
             return;
         }

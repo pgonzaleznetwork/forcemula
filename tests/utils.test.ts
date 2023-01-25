@@ -8,7 +8,7 @@ test('White space should be removed',() =>{
 })
 
 test('Word should be converted to upper case',() =>{
-    expect(_.$('hi')).toBe('HI');
+    expect(_.upper('hi')).toBe('HI');
 })
 
 test('Parts should return the parts based on a dot delimeter', () => {

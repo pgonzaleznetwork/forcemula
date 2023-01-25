@@ -1,6 +1,6 @@
 const {STANDARD_RELATIONSHIP_ID_NAME,DOLLAR_SIGN} = require('../parser/grammar');
 const cpqMapping = require('../mappings/cpq')
-const {$,getField,parts} = require('../utils');
+const {upper,getField,parts} = require('../utils');
 const MetadataType = require('../MetadataTypes');
 const {isCustom,isCustomMetadata,isStandardRelationship} = require('../parser/grammarChecks');
 
@@ -105,7 +105,7 @@ let mapCPQField = (value,originalObject) => {
 
     let [relationshipName,field] = parts(value);
 
-    let apiName = cpqMapping[$(originalObject)]?.[$(relationshipName)];
+    let apiName = cpqMapping[upper(originalObject)]?.[upper(relationshipName)];
 
     return createApiName(apiName ? apiName : relationshipName,field)
 

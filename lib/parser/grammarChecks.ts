@@ -1,7 +1,7 @@
 const G = require('../parser/grammar');
-const {$,getField,getObject,parts} = require('../utils');
+const {upper,getField,getObject,parts} = require('../utils');
 
-type GrammarFunction = (value:string) => boolean
+type GrammarFunction = (value:string) => boolean;
 
 let isCommentStart: GrammarFunction = value => value == G.COMMENT_START;
 let isCommentEnd: GrammarFunction = value => value ==  G.COMMENT_END;
@@ -12,27 +12,27 @@ let isNumber = value => !isNaN(value);
 
 let isInterestingOperator = operator => ![',','(',')'].includes(operator);
 
-let isStandardRelationship = value => !$(value).endsWith(G.RELATIONSHIP_SUFFIX);
+let isStandardRelationship = value => !upper(value).endsWith(G.RELATIONSHIP_SUFFIX);
 
 let isRelationshipField = value => value.includes('.');
 
-let isCustom = value => $(value).endsWith(G.CUSTOM_ENTITY_SUFFIX);
+let isCustom = value => upper(value).endsWith(G.CUSTOM_ENTITY_SUFFIX);
 
-let isUserField = value => G.USER_FIELDS.includes($(getObject(value)));
+let isUserField = value => G.USER_FIELDS.includes(upper(getObject(value)));
 
-let isCustomMetadata = value => $(value).includes(G.CUSTOM_METADATA_PREFIX);
+let isCustomMetadata = value => upper(value).includes(G.CUSTOM_METADATA_PREFIX);
 
-let isCustomLabel = value => $(value).startsWith(G.CUSTOM_LABEL_PREFIX);
+let isCustomLabel = value => upper(value).startsWith(G.CUSTOM_LABEL_PREFIX);
 
-let isCustomSetting = value => $(value).startsWith(G.CUSTOM_SETTING_PREFIX);
+let isCustomSetting = value => upper(value).startsWith(G.CUSTOM_SETTING_PREFIX);
 
-let isObjectType = value => $(value).startsWith(G.OBJECT_TYPE_PREFIX);
+let isObjectType = value => upper(value).startsWith(G.OBJECT_TYPE_PREFIX);
 
-let isSpecialPrefix = value => G.SPECIAL_PREFIXES.includes($(value));
+let isSpecialPrefix = value => G.SPECIAL_PREFIXES.includes(upper(value));
 
-let isParentField = value => $(getField(value)) == G.SELF_REFERENTIAL_PARENT_FIELD;
+let isParentField = value => upper(getField(value)) == G.SELF_REFERENTIAL_PARENT_FIELD;
 
-let isParent = value => $(value) == G.SELF_REFERENTIAL_PARENT_OBJECT;
+let isParent = value => upper(value) == G.SELF_REFERENTIAL_PARENT_OBJECT;
 
 let isProcessBuilderPrefix = value => {
     return value.startsWith(G.PROCESS_BUILDER_BRACKET_START) && value.endsWith(G.PROCESS_BUILDER_BRACKET_END);
@@ -40,7 +40,7 @@ let isProcessBuilderPrefix = value => {
 
 let isCPQRelationship = value => {
 
-    let obj =  $(getObject(value));
+    let obj =  upper(getObject(value));
 
     return obj.startsWith(G.CPQ_NAMESPACE) && obj.endsWith(G.RELATIONSHIP_SUFFIX);
 }
@@ -55,7 +55,7 @@ let isFunction = value => {
     
     if(isNothing(value)) return false;
     
-    return G.FUNCTIONS.includes($(value.trim()));
+    return G.FUNCTIONS.includes(upper(value.trim()));
 };
 
 module.exports = {isFunction,isOperator,

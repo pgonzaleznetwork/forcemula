@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/index.js",
     "build":"tsc",
-    "test": "jest --silent=false",
+    "test": "jest dist --silent=false",
     "watch": "jest dist --silent=false --verbose --detectOpenHandles --coverage --watchAll",
     "test:coverage": "jest --silent=false --verbose --detectOpenHandles --coverage && jest-coverage-badges"
   },
