@@ -1,8 +1,10 @@
 const G = require('../parser/grammar');
 const {$,getField,getObject,parts} = require('../utils');
 
-let isCommentStart = value => value == G.COMMENT_START;
-let isCommentEnd = value => value ==  G.COMMENT_END;
+type GrammarFunction = (value:string) => boolean
+
+let isCommentStart: GrammarFunction = value => value == G.COMMENT_START;
+let isCommentEnd: GrammarFunction = value => value ==  G.COMMENT_END;
 
 let isNothing = value => (value == null || value == undefined || value == '');
 

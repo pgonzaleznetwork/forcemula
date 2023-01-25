@@ -51,7 +51,7 @@ function parseType(value,originalObject){
                 baseObject = lastKnownParent;
             }
 
-            fieldName = transform.createApiName(baseObject,field);
+            let fieldName = transform.createApiName(baseObject,field);
           
             if(!isLastField){
 

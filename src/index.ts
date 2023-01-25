@@ -63,11 +63,11 @@ function parse({object,formula}){
 
     allTypes = organizeInstancesByType(types);
 
-    function determineType(value){
+    function determineType(value: string | number){
 
         if(check.isFunction(value)){
 
-            functions.add(_.$(value));
+            functions.add(_.$(value))
             clearWord();
             return;
         }
