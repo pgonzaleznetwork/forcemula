@@ -8,7 +8,7 @@ let isCommentEnd: GrammarFunction = value => value ==  G.COMMENT_END;
 
 let isNothing = value => (value == null || value == undefined || value == '');
 
-let isNumber = value => !isNaN(value);
+let isNumber = (value:string) => !isNaN(Number(value));
 
 let isInterestingOperator = operator => ![',','(',')'].includes(operator);
 
