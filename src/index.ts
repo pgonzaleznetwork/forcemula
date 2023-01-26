@@ -3,9 +3,16 @@ let _ = require('../lib/utils');
 let check = require('../lib/parser/grammarChecks')
 let MetadataType = require('../lib/MetadataTypes');
 
-function parse({object,formula}){
+type ParseRequest = {
+    parentObject:string,
+    formula:string
+}
 
-    if(!object || !formula) throw "MISSING_PARAMETER"
+function parse(request:ParseRequest){
+
+    let {parentObject,formula} = request;
+
+    if(!parentObject || !formula) throw "MISSING_PARAMETER"
 
     let functions = new Set();
     let operators = new Set();
@@ -78,7 +85,7 @@ function parse({object,formula}){
             return;
         }
         else{
-            types.push(...parseType(value,object));
+            types.push(...parseType(value,parentObject));
         }
 
         clearWord();
