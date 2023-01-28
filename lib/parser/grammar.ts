@@ -1,40 +1,40 @@
-const RELATIONSHIP_SUFFIX = '__R';
+const RELATIONSHIP_SUFFIX: string = '__R';
 
-const STRING_DELIMETER = '"';
+const STRING_DELIMETER: string = '"';
 
-const STANDARD_RELATIONSHIP_ID_NAME = 'Id';
+const STANDARD_RELATIONSHIP_ID_NAME: string = 'Id';
 
-const CUSTOM_ENTITY_SUFFIX = '__C';
+const CUSTOM_ENTITY_SUFFIX: string = '__C';
 
-const USER_FIELDS = ['OWNER','MANAGER','CREATEDBY','LASTMODIFIEDBY'];
+const USER_FIELDS: string[] = ['OWNER','MANAGER','CREATEDBY','LASTMODIFIEDBY'];
 
-const CPQ_NAMESPACE = 'SBQQ__';
+const CPQ_NAMESPACE: string = 'SBQQ__';
 
-const SPECIAL_PREFIXES = ['$USER','$PROFILE','$ORGANIZATION','$USERROLE','$SYSTEM'];
+const SPECIAL_PREFIXES: string[] = ['$USER','$PROFILE','$ORGANIZATION','$USERROLE','$SYSTEM'];
 
-const CUSTOM_METADATA_PREFIX = '__MDT';
+const CUSTOM_METADATA_PREFIX: string = '__MDT';
 
-const CUSTOM_LABEL_PREFIX = '$LABEL.';
+const CUSTOM_LABEL_PREFIX: string = '$LABEL.';
 
-const CUSTOM_SETTING_PREFIX = '$SETUP.';
+const CUSTOM_SETTING_PREFIX: string = '$SETUP.';
 
-const OBJECT_TYPE_PREFIX = '$OBJECTTYPE.'
+const OBJECT_TYPE_PREFIX: string = '$OBJECTTYPE.'
 
-const COMMENT_START = '/*';
+const COMMENT_START: string = '/*';
 
-const COMMENT_END = '*/';
+const COMMENT_END: string = '*/';
 
-const SELF_REFERENTIAL_PARENT_FIELD = 'PARENTID';
+const SELF_REFERENTIAL_PARENT_FIELD: string = 'PARENTID';
 
-const SELF_REFERENTIAL_PARENT_OBJECT = 'PARENT';
+const SELF_REFERENTIAL_PARENT_OBJECT: string = 'PARENT';
 
-const PROCESS_BUILDER_BRACKET_START = '[';
+const PROCESS_BUILDER_BRACKET_START: string = '[';
 
-const PROCESS_BUILDER_BRACKET_END = ']';
+const PROCESS_BUILDER_BRACKET_END: string = ']';
 
-const DOLLAR_SIGN = '$';
+const DOLLAR_SIGN: string = '$';
 
-const OPERATORS = [
+const OPERATORS: string[] = [
     `+`,
     `-`,
     `*`,
@@ -52,7 +52,7 @@ const OPERATORS = [
     
 ]
 
-const FUNCTIONS = [
+const FUNCTIONS: string[] = [
     `TRUE`,
     `FALSE`,
     `ADDMONTHS`,
