@@ -1,61 +1,61 @@
-const G = require('../parser/grammar');
+const grammar = require('../parser/grammar');
 const {upper,getField,getObject,parts} = require('../utils');
 
-type GrammarFunction = (value:string) => boolean;
+type GrammarPredicate = (token:string) => boolean;
 
-let isCommentStart: GrammarFunction = value => value == G.COMMENT_START;
-let isCommentEnd: GrammarFunction = value => value ==  G.COMMENT_END;
+let isCommentStart: GrammarPredicate = token => token == grammar.COMMENT_START;
+let isCommentEnd: GrammarPredicate = token => token ==  grammar.COMMENT_END;
 
-let isNothing = value => (value == null || value == undefined || value == '');
+let isNothing: GrammarPredicate = token => (token == null || token == undefined || token == '');
 
-let isNumber = (value:string) => !isNaN(Number(value));
+let isNumber: GrammarPredicate = (token:string) => !isNaN(Number(token));
 
-let isInterestingOperator = operator => ![',','(',')'].includes(operator);
+let isInterestingOperator: GrammarPredicate = operator => ![',','(',')'].includes(operator);
 
-let isStandardRelationship = value => !upper(value).endsWith(G.RELATIONSHIP_SUFFIX);
+let isStandardRelationship: GrammarPredicate = token => !upper(token).endsWith(grammar.RELATIONSHIP_SUFFIX);
 
-let isRelationshipField = value => value.includes('.');
+let isRelationshipField: GrammarPredicate = token => token.includes('.');
 
-let isCustom = value => upper(value).endsWith(G.CUSTOM_ENTITY_SUFFIX);
+let isCustom: GrammarPredicate = token => upper(token).endsWith(grammar.CUSTOM_ENTITY_SUFFIX);
 
-let isUserField = value => G.USER_FIELDS.includes(upper(getObject(value)));
+let isUserField: GrammarPredicate = token => grammar.USER_FIELDS.includes(upper(getObject(token)));
 
-let isCustomMetadata = value => upper(value).includes(G.CUSTOM_METADATA_PREFIX);
+let isCustomMetadata: GrammarPredicate = token => upper(token).includes(grammar.CUSTOM_METADATA_PREFIX);
 
-let isCustomLabel = value => upper(value).startsWith(G.CUSTOM_LABEL_PREFIX);
+let isCustomLabel: GrammarPredicate = token => upper(token).startsWith(grammar.CUSTOM_LABEL_PREFIX);
 
-let isCustomSetting = value => upper(value).startsWith(G.CUSTOM_SETTING_PREFIX);
+let isCustomSetting: GrammarPredicate = token => upper(token).startsWith(grammar.CUSTOM_SETTING_PREFIX);
 
-let isObjectType = value => upper(value).startsWith(G.OBJECT_TYPE_PREFIX);
+let isObjectType: GrammarPredicate = token => upper(token).startsWith(grammar.OBJECT_TYPE_PREFIX);
 
-let isSpecialPrefix = value => G.SPECIAL_PREFIXES.includes(upper(value));
+let isSpecialPrefix: GrammarPredicate = token => grammar.SPECIAL_PREFIXES.includes(upper(token));
 
-let isParentField = value => upper(getField(value)) == G.SELF_REFERENTIAL_PARENT_FIELD;
+let isParentField: GrammarPredicate = token => upper(getField(token)) == grammar.SELF_REFERENTIAL_PARENT_FIELD;
 
-let isParent = value => upper(value) == G.SELF_REFERENTIAL_PARENT_OBJECT;
+let isParent: GrammarPredicate = token => upper(token) == grammar.SELF_REFERENTIAL_PARENT_OBJECT;
 
-let isProcessBuilderPrefix = value => {
-    return value.startsWith(G.PROCESS_BUILDER_BRACKET_START) && value.endsWith(G.PROCESS_BUILDER_BRACKET_END);
+let isProcessBuilderPrefix: GrammarPredicate = token => {
+    return token.startsWith(grammar.PROCESS_BUILDER_BRACKET_START) && token.endsWith(grammar.PROCESS_BUILDER_BRACKET_END);
 }
 
-let isCPQRelationship = value => {
+let isCPQRelationship: GrammarPredicate = token => {
 
-    let obj =  upper(getObject(value));
+    let obj =  upper(getObject(token));
 
-    return obj.startsWith(G.CPQ_NAMESPACE) && obj.endsWith(G.RELATIONSHIP_SUFFIX);
+    return obj.startsWith(grammar.CPQ_NAMESPACE) && obj.endsWith(grammar.RELATIONSHIP_SUFFIX);
 }
 
-let isOperator = char => {
+let isOperator: GrammarPredicate = char => {
 
     if(isNothing(char)) return false;
-    return G.OPERATORS.includes(char.trim());
+    return grammar.OPERATORS.includes(char.trim());
 }
 
-let isFunction = value => {
+let isFunction: GrammarPredicate = token => {
     
-    if(isNothing(value)) return false;
+    if(isNothing(token)) return false;
     
-    return G.FUNCTIONS.includes(upper(value.trim()));
+    return grammar.FUNCTIONS.includes(upper(token.trim()));
 };
 
 module.exports = {isFunction,isOperator,
