@@ -45,10 +45,10 @@ const isCPQRelationship: GrammarPredicate = token => {
     return obj.startsWith(grammar.CPQ_NAMESPACE) && obj.endsWith(grammar.RELATIONSHIP_SUFFIX);
 }
 
-const isOperator: GrammarPredicate = char => {
+const isOperator: GrammarPredicate = token => {
 
-    if(isNothing(char)) return false;
-    return grammar.OPERATORS.includes(char.trim());
+    if(isNothing(token)) return false;
+    return grammar.OPERATORS.includes(token.trim());
 }
 
 const isFunction: GrammarPredicate = token => {
