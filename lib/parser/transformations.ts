@@ -10,7 +10,9 @@ let transformToUserField = value => `User.${getField(value)}`;
 
 let replaceRwithC = value => value.slice(0,-1).concat('c');
 
-let createApiName = (object,field) => `${object}.${field}`;
+let createApiName = (objectName: string,fieldName: string) => {
+    return `${objectName}.${fieldName}`;
+}
 
 let parseCustomMetadata = value => {
 

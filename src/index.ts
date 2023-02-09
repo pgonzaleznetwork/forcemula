@@ -70,24 +70,26 @@ function parse(request:ParseRequest){
 
     allTypes = organizeInstancesByType(types);
 
-    function determineType(value: string){
+    function determineType(token: string){
 
-        if(check.isNumber(value)){
+        const upperToken = token.toUpperCase();
+
+        if(check.isNumber(upperToken)){
 
             clearWord();
             return;
         }
 
-        else if(check.isFunction(value)){
+        else if(check.isFunction(upperToken)){
 
-            functions.add(_.upper(value))
+            functions.add(upperToken)
             clearWord();
             return;
         }
 
         
         else{
-            types.push(...parseType(value,parentObject));
+            types.push(...parseType(token,parentObject));
         }
 
         clearWord();

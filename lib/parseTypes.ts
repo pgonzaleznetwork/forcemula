@@ -2,89 +2,91 @@ let _ = require('./utils');
 let check = require('./parser/grammarChecks');
 let transform = require('./parser/transformations');
 
-function parseType(value,originalObject){
+function parseType(token: string,originalObjectName: string){
 
     let types = []
 
     //this order matters, we have to evaluate object types before anything else because the syntax can be extremely similar to other types
 
-    if(check.isObjectType(value)){
-        types.push(...transform.parseObjectType(value))
+    if(check.isObjectType(token)){
+        types.push(...transform.parseObjectType(token))
     }
    
-    else if(check.isCustomMetadata(value)){
-        types.push(...transform.parseCustomMetadata(value))
+    else if(check.isCustomMetadata(token)){
+        types.push(...transform.parseCustomMetadata(token))
     }
 
-    else if(check.isCustomLabel(value)){
-        types.push(transform.parseCustomLabel(value));
+    else if(check.isCustomLabel(token)){
+        types.push(transform.parseCustomLabel(token));
     }
 
-    else if(check.isCustomSetting(value)){
-        types.push(...transform.parseCustomSetting(value))
+    else if(check.isCustomSetting(token)){
+        types.push(...transform.parseCustomSetting(token))
     }
    
-    else if(check.isRelationshipField(value)){
+    else if(check.isRelationshipField(token)){
 
-        let lastKnownParent = '';
+        let lastKnownParentName = '';
 
-        _.parts(value).forEach((field,index,fields) => {
+        _.parts(token).forEach((tokenPart,index,tokenParts) => {
 
-            if(check.isSpecialPrefix(field) || check.isProcessBuilderPrefix(field)) return;
+            if(check.isSpecialPrefix(tokenPart) || check.isProcessBuilderPrefix(tokenPart)) return;
             
-            let baseObject = '';
-            let isLastField = (fields.length-1 == index);
+            let baseObjectName = '';
+            let isLastField = (tokenParts.length-1 == index);
 
             if(index == 0){
-                baseObject = originalObject;
+                baseObjectName = originalObjectName;
             }
             else{
 
-                baseObject = fields[index-1];
+                baseObjectName = tokenParts[index-1];
 
-                if(check.isProcessBuilderPrefix(baseObject)){
-                    baseObject = transform.removeFirstAndLastChars(baseObject);
+                if(check.isProcessBuilderPrefix(baseObjectName)){
+                    baseObjectName = transform.removeFirstAndLastChars(baseObjectName);
                 }
             }
 
-            if(check.isParent(baseObject) && lastKnownParent != ''){
-                baseObject = lastKnownParent;
+            if(check.isParent(baseObjectName) && lastKnownParentName != ''){
+                baseObjectName = lastKnownParentName;
             }
 
-            let fieldName = transform.createApiName(baseObject,field);
+            let fieldApiName = transform.createApiName(baseObjectName,tokenPart);
           
             if(!isLastField){
 
-                if(check.isStandardRelationship(fieldName)){
-                    fieldName = transform.transformToId(fieldName);
+                if(check.isStandardRelationship(fieldApiName)){
+                    fieldApiName = transform.transformToId(fieldApiName);
                 }
                 else{
-                    fieldName = transform.replaceRwithC(fieldName);
+                    fieldApiName = transform.replaceRwithC(fieldApiName);
                 }
             }
 
-            if(check.isCPQRelationship(fieldName)){
-                fieldName = transform.mapCPQField(fieldName,originalObject)
+            if(check.isCPQRelationship(fieldApiName)){
+                fieldApiName = transform.mapCPQField(fieldApiName,originalObjectName)
             }
 
-            if(check.isUserField(fieldName)){
-                fieldName = transform.transformToUserField(fieldName)
+            else if(check.isUserField(fieldApiName)){
+                fieldApiName = transform.transformToUserField(fieldApiName)
             }
 
-            if(check.isParentField(fieldName) && lastKnownParent == ''){
-                lastKnownParent = baseObject;
-            }
+            else if(check.isParentField(fieldApiName)){
 
-            else if(check.isParentField(fieldName) && lastKnownParent != ''){
-                fieldName = transform.createApiName(lastKnownParent,_.getField(fieldName));
+                if(lastKnownParentName == ''){
+                    lastKnownParentName = baseObjectName;
+                }
+                else{
+                    fieldApiName = transform.createApiName(lastKnownParentName,_.getField(fieldApiName));
+                }
             }
             
-            parseField(fieldName,originalObject);
+            parseField(fieldApiName,originalObjectName);
         });
     }
 
     else{      
-        parseField(value,originalObject);
+        parseField(token,originalObjectName);
     }
 
     function parseField(field,object){
@@ -98,7 +100,7 @@ function parseType(value,originalObject){
             types.push(transform.parseObject(_.getObject(field)));
         }
         else{
-            //i.e Name
+            //i.e Industry
             types.push(transform.parseField(transform.createApiName(object,field)));
             types.push(transform.parseObject(object));
         }
