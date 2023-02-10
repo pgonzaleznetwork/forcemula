@@ -1,7 +1,9 @@
+
+
 const {parts,getField,getObject} = require('./utils');
 const check = require('./parser/grammarChecks');
 const transform = require('./parser/transformations');
-const {Field} = require('../lib/interfaces/interfaces');
+const {Field, SObjectFieldParser} = require('../lib/interfaces/interfaces');
 
 function parseType(token: string,originalObjectName: string){
 
@@ -53,69 +55,55 @@ function parseType(token: string,originalObjectName: string){
             }
 
             let sObjectField = new Field(baseObjectName,tokenPart);
+            const parser = new SObjectFieldParser(sObjectField);
            
           
             if(!isLastField){
 
-                if(check.isStandardRelationship(sObjectField.getApiName())){
-                    const newApiName = transform.transformToId(sObjectField.getApiName());
-                    sObjectField.resetApiName(newApiName);
-                    
+                if(parser.isStandardRelationship()){
+                    sObjectField.setApiName(parser.getNameAsId())
                 }
                 else{
-                    const newApiName = transform.replaceRwithC(sObjectField.getApiName());
-                    sObjectField.resetApiName(newApiName);
-                    
+                    sObjectField.setApiName(parser.getNameWithCustomRelationshipSuffix());
                 }
             }
 
-            if(check.isCPQRelationship(sObjectField.getApiName())){
-                const newApiName = transform.mapCPQField(sObjectField.getApiName(),originalObjectName)
-                sObjectField.resetApiName(newApiName);
-                
+            if(parser.isCPQRelationship()){
+                sObjectField.setApiName(parser.getNameAsCPQField(originalObjectName));
             }
 
-            else if(check.isUserField(sObjectField.getApiName())){
-                const newApiName = transform.transformToUserField(sObjectField.getApiName())
-                sObjectField.resetApiName(newApiName);
-                
+            else if(parser.isUserField()){
+                sObjectField.setApiName(parser.getNameAsUserField());
             }
 
-            else if(check.isParentField(sObjectField.getApiName())){
+            else if(parser.isParentField()){
 
                 if(lastKnownParentName == ''){
                     lastKnownParentName = baseObjectName;
                 }
                 else{
                     let relationshipField = new Field(lastKnownParentName,sObjectField.getFieldName());
-                    sObjectField.resetApiName(relationshipField.getApiName());
+                    sObjectField.setApiName(relationshipField.getApiName());
                     
                 }
             }
             
-            parseField(sObjectField.getApiName(),originalObjectName);
+            parseField(sObjectField);
         });
     }
 
     else{      
-        parseField(token,originalObjectName);
+        //we reach here if the formula is a single field, like "Name", which is valid syntax
+        let sObjectField = new Field(originalObjectName,token);
+        parseField(sObjectField);
     }
 
-    function parseField(fieldName: string,objectName: string){
+    function parseField(sObjectField: InstanceType<typeof Field>){
 
-        fieldName = transform.removePrefix(fieldName);
+        sObjectField.setApiName(transform.removePrefix(sObjectField.getApiName()));
 
-        //i.e Account.Industry
-        if(parts(fieldName).length == 2){
-
-            types.push(transform.parseField(fieldName));
-            types.push(transform.parseObject(getObject(fieldName)));
-        }
-        else{
-            //i.e Industry
-            types.push(transform.parseField(transform.createApiName(objectName,fieldName)));
-            types.push(transform.parseObject(objectName));
-        }
+        types.push(transform.parseField(sObjectField.getApiName()));
+        types.push(transform.parseObject(sObjectField.getObjectName()));
     }
     
     return types;
