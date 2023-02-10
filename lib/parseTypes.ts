@@ -53,32 +53,32 @@ function parseType(token: string,originalObjectName: string){
             }
 
             let sObjectField = new Field(baseObjectName,tokenPart);
-            //let fieldApiName = sObjectField.getApiName();
+           
           
             if(!isLastField){
 
                 if(check.isStandardRelationship(sObjectField.getApiName())){
                     const newApiName = transform.transformToId(sObjectField.getApiName());
                     sObjectField.resetApiName(newApiName);
-                    //fieldApiName = transform.transformToId(fieldApiName);
+                    
                 }
                 else{
                     const newApiName = transform.replaceRwithC(sObjectField.getApiName());
                     sObjectField.resetApiName(newApiName);
-                    //fieldApiName = transform.replaceRwithC(fieldApiName);
+                    
                 }
             }
 
             if(check.isCPQRelationship(sObjectField.getApiName())){
                 const newApiName = transform.mapCPQField(sObjectField.getApiName(),originalObjectName)
                 sObjectField.resetApiName(newApiName);
-                //fieldApiName = transform.mapCPQField(sObjectField.getApiName(),originalObjectName)
+                
             }
 
             else if(check.isUserField(sObjectField.getApiName())){
                 const newApiName = transform.transformToUserField(sObjectField.getApiName())
                 sObjectField.resetApiName(newApiName);
-                //fieldApiName = transform.transformToUserField(fieldApiName)
+                
             }
 
             else if(check.isParentField(sObjectField.getApiName())){
@@ -89,7 +89,7 @@ function parseType(token: string,originalObjectName: string){
                 else{
                     let relationshipField = new Field(lastKnownParentName,sObjectField.getFieldName());
                     sObjectField.resetApiName(relationshipField.getApiName());
-                    //fieldApiName = transform.createApiName(lastKnownParentName,getField(fieldApiName));
+                    
                 }
             }
             
