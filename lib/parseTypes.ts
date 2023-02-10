@@ -1,6 +1,7 @@
-let _ = require('./utils');
-let check = require('./parser/grammarChecks');
-let transform = require('./parser/transformations');
+const {parts,getField,getObject} = require('./utils');
+const check = require('./parser/grammarChecks');
+const transform = require('./parser/transformations');
+const {Field} = require('../lib/interfaces/interfaces');
 
 function parseType(token: string,originalObjectName: string){
 
@@ -28,7 +29,7 @@ function parseType(token: string,originalObjectName: string){
 
         let lastKnownParentName = '';
 
-        _.parts(token).forEach((tokenPart,index,tokenParts) => {
+        parts(token).forEach((tokenPart,index,tokenParts) => {
 
             if(check.isSpecialPrefix(tokenPart) || check.isProcessBuilderPrefix(tokenPart)) return;
             
@@ -51,37 +52,48 @@ function parseType(token: string,originalObjectName: string){
                 baseObjectName = lastKnownParentName;
             }
 
-            let fieldApiName = transform.createApiName(baseObjectName,tokenPart);
+            let sObjectField = new Field(baseObjectName,tokenPart);
+            //let fieldApiName = sObjectField.getApiName();
           
             if(!isLastField){
 
-                if(check.isStandardRelationship(fieldApiName)){
-                    fieldApiName = transform.transformToId(fieldApiName);
+                if(check.isStandardRelationship(sObjectField.getApiName())){
+                    const newApiName = transform.transformToId(sObjectField.getApiName());
+                    sObjectField.resetApiName(newApiName);
+                    //fieldApiName = transform.transformToId(fieldApiName);
                 }
                 else{
-                    fieldApiName = transform.replaceRwithC(fieldApiName);
+                    const newApiName = transform.replaceRwithC(sObjectField.getApiName());
+                    sObjectField.resetApiName(newApiName);
+                    //fieldApiName = transform.replaceRwithC(fieldApiName);
                 }
             }
 
-            if(check.isCPQRelationship(fieldApiName)){
-                fieldApiName = transform.mapCPQField(fieldApiName,originalObjectName)
+            if(check.isCPQRelationship(sObjectField.getApiName())){
+                const newApiName = transform.mapCPQField(sObjectField.getApiName(),originalObjectName)
+                sObjectField.resetApiName(newApiName);
+                //fieldApiName = transform.mapCPQField(sObjectField.getApiName(),originalObjectName)
             }
 
-            else if(check.isUserField(fieldApiName)){
-                fieldApiName = transform.transformToUserField(fieldApiName)
+            else if(check.isUserField(sObjectField.getApiName())){
+                const newApiName = transform.transformToUserField(sObjectField.getApiName())
+                sObjectField.resetApiName(newApiName);
+                //fieldApiName = transform.transformToUserField(fieldApiName)
             }
 
-            else if(check.isParentField(fieldApiName)){
+            else if(check.isParentField(sObjectField.getApiName())){
 
                 if(lastKnownParentName == ''){
                     lastKnownParentName = baseObjectName;
                 }
                 else{
-                    fieldApiName = transform.createApiName(lastKnownParentName,_.getField(fieldApiName));
+                    let relationshipField = new Field(lastKnownParentName,sObjectField.getFieldName());
+                    sObjectField.resetApiName(relationshipField.getApiName());
+                    //fieldApiName = transform.createApiName(lastKnownParentName,getField(fieldApiName));
                 }
             }
             
-            parseField(fieldApiName,originalObjectName);
+            parseField(sObjectField.getApiName(),originalObjectName);
         });
     }
 
@@ -89,20 +101,20 @@ function parseType(token: string,originalObjectName: string){
         parseField(token,originalObjectName);
     }
 
-    function parseField(field,object){
+    function parseField(fieldName: string,objectName: string){
 
-        field = transform.removePrefix(field);
+        fieldName = transform.removePrefix(fieldName);
 
         //i.e Account.Industry
-        if(_.parts(field).length == 2){
+        if(parts(fieldName).length == 2){
 
-            types.push(transform.parseField(field));
-            types.push(transform.parseObject(_.getObject(field)));
+            types.push(transform.parseField(fieldName));
+            types.push(transform.parseObject(getObject(fieldName)));
         }
         else{
             //i.e Industry
-            types.push(transform.parseField(transform.createApiName(object,field)));
-            types.push(transform.parseObject(object));
+            types.push(transform.parseField(transform.createApiName(objectName,fieldName)));
+            types.push(transform.parseObject(objectName));
         }
     }
     
