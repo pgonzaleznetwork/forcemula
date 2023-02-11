@@ -13,13 +13,8 @@ function parseType(token: string,originalObjectName: string){
 
 
     if(SObjectType.isTypeOf(token)){
-        //types.push(...new SObjectType(token).parse());
-        types.push(...transform.parseObjectType(token))
+        types.push(...new SObjectType(token).parse());
     }
-
-    /*if(check.isObjectType(token)){
-        types.push(...transform.parseObjectType(token))
-    }*/
    
     else if(check.isCustomMetadata(token)){
         types.push(...transform.parseCustomMetadata(token))
