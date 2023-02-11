@@ -3,7 +3,7 @@
 const {parts,getField,getObject} = require('./utils');
 const check = require('./parser/grammarChecks');
 const transform = require('./parser/transformations');
-const {Field, SObjectFieldParser,CustomLabelParser} = require('../lib/interfaces/interfaces');
+const {Field, SObjectFieldParser,CustomLabelParser,SObjectType} = require('../lib/interfaces/interfaces');
 
 function parseType(token: string,originalObjectName: string){
 
@@ -11,13 +11,15 @@ function parseType(token: string,originalObjectName: string){
 
     //this order matters, we have to evaluate object types before anything else because the syntax can be extremely similar to other types
 
-    /*if(CustomLabelParser.isTypeOf(token)){
-        types.push(...transform.parseObjectType(token))
-    }*/
 
-    if(check.isObjectType(token)){
+    if(SObjectType.isTypeOf(token)){
+        //types.push(...new SObjectType(token).parse());
         types.push(...transform.parseObjectType(token))
     }
+
+    /*if(check.isObjectType(token)){
+        types.push(...transform.parseObjectType(token))
+    }*/
    
     else if(check.isCustomMetadata(token)){
         types.push(...transform.parseCustomMetadata(token))

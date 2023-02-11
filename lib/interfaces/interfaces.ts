@@ -2,8 +2,8 @@ const MetadataType = require('../MetadataTypes');
 
 interface FormulaToken{
     //refactor to enum
-    metadataType: InstanceType<typeof MetadataType>;
-    instanceName: string;
+    type: InstanceType<typeof MetadataType>;
+    instance: string;
 }
 
 class SObject{
@@ -25,18 +25,9 @@ class SObject{
 
     public parse(): FormulaToken{
 
-        let type;
-
-        if(this.isCustom()){
-            type = MetadataType.CUSTOM_OBJECT;
-        }
-        else{
-            type = MetadataType.STANDARD_OBJECT;
-        }
-
         let parsedObject: FormulaToken = {
-            metadataType: type,
-            instanceName: this.objectName
+            type: (this.isCustom() ? MetadataType.CUSTOM_OBJECT : MetadataType.STANDARD_OBJECT),
+            instance: this.objectName
         }
 
         return parsedObject;
@@ -73,6 +64,19 @@ class Field{
         else{
            throw Error('API names must use dot notation, for example Account.Industry')
         }
+    }
+
+    public isCustom(): boolean{
+        return this.fieldName.toUpperCase().endsWith('__C');
+    }
+
+    public parse(): FormulaToken{
+
+        let parsedField: FormulaToken = {
+            type: (this.isCustom() ? MetadataType.CUSTOM_FIELD : MetadataType.STANDARD_FIELD ),
+            instance: this.getApiName()
+        }
+        return parsedField;
     }
 
 }
@@ -143,7 +147,7 @@ class SObjectFieldParser{
     }
 }
 
-/*class SObjectParser{
+class SObjectType{
 
     token: string;
 
@@ -155,29 +159,21 @@ class SObjectFieldParser{
         return token.toUpperCase().startsWith('$OBJECTTYPE.');
     }
 
-    public parse(): {
+    public parse(): FormulaToken[]{
+
         //$ObjectType.Center__c.Fields.My_text_field__c
-        let [mdType,sobject,prop,fieldName] = this.token.split('.');
+        let [mdType,objectName,prop,fieldName] = this.token.split('.');
 
-        let type = MetadataType.STANDARD_OBJECT;
+        let sObject = new SObject(objectName);
+        let parsedObject = sObject.parse();
 
-        if(sobject.toUpperCase().endsWith('__C')){
-            type = MetadataType.CUSTOM_OBJECT
-        }
+        let field = new Field(objectName,fieldName);
+        let parsedField = field.parse();
 
-        let parsedObject: FormulaToken = {
-            metadataType: type,
-            instanceName: sobject
-        }
-
-        let customFieldType = MetadataType.STANDARD_FIELD;
-
-        if(fieldName.toUpperCase().endsWith('__C')){
-            customFieldType = MetadataType.CUSTOM_FIELD;
-        }
+        return [parsedObject,parsedField];        
 
     }
-}*/
+}
 
 class CustomLabelParser{
 
@@ -192,4 +188,4 @@ class CustomLabelParser{
     }
 }
 
-export {Field,SObjectFieldParser,CustomLabelParser}
+export {Field,SObjectFieldParser,CustomLabelParser,SObjectType}
