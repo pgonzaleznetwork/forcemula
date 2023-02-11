@@ -100,7 +100,7 @@ function parseType(token: string,originalObjectName: string){
 
     function parseField(sObjectField: InstanceType<typeof Field>){
 
-        sObjectField.setApiName(transform.removePrefix(sObjectField.getApiName()));
+        sObjectField.setApiName(sObjectField.getApiName())
 
         types.push(transform.parseField(sObjectField.getApiName()));
         types.push(transform.parseObject(sObjectField.getObjectName()));

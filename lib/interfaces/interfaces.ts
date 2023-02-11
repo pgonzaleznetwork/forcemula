@@ -3,15 +3,16 @@ class Field{
     constructor(protected objectName: string, protected fieldName: string){
     }
 
-    getApiName(): string{
+    public getApiName(): string{
         return `${this.objectName}.${this.fieldName}`;
+        //return (this.removePrefix(apiName));
     }
 
-    getObjectName(): string{
+    public getObjectName(): string{
         return this.objectName;
     }
 
-    getFieldName(): string{
+    public getFieldName(): string{
         return this.fieldName;
     }
 
@@ -31,8 +32,11 @@ class Field{
 
 class SObjectFieldParser{
 
-    constructor(private sObjectField: Field){
+    private sObjectField: Field
 
+    constructor(sObjectField: Field){
+        this.sObjectField = sObjectField;
+        this.sObjectField.setApiName(this.removeMergeFieldPrefix(this.sObjectField.getApiName()));
     }
 
     private RELATIONSHIP_SUFFIX = '__R';
@@ -40,41 +44,41 @@ class SObjectFieldParser{
     private SELF_REFERENTIAL_PARENT_FIELD = 'PARENTID';
     private STANDARD_RELATIONSHIP_ID_NAME = 'Id';
 
-    isStandardRelationship(): boolean{
+    public isStandardRelationship(): boolean{
         return !this.sObjectField.getApiName().toUpperCase().endsWith(this.RELATIONSHIP_SUFFIX);
     }
 
-    isCPQRelationship(): boolean{
+    public isCPQRelationship(): boolean{
 
         const upperObjectName =  this.sObjectField.getObjectName().toUpperCase();
         return upperObjectName.startsWith('SBQQ__') && upperObjectName.endsWith(this.RELATIONSHIP_SUFFIX);
     }
 
-    isUserField(): boolean {
+    public isUserField(): boolean {
         const upperObjectName =  this.sObjectField.getObjectName().toUpperCase();
         return this.USER_FIELDS.includes(upperObjectName)
     }
 
-    isParentField(): boolean{
+    public isParentField(): boolean{
         return this.sObjectField.getFieldName().toUpperCase() == this.SELF_REFERENTIAL_PARENT_FIELD;
     }
 
-    getNameAsId(): string {
+    public getNameAsId(): string {
         let apiName = this.sObjectField.getApiName()
         return apiName+this.STANDARD_RELATIONSHIP_ID_NAME;
     }
 
-    getNameAsUserField(): string{
+    public getNameAsUserField(): string{
         let fieldName = this.sObjectField.getFieldName();
         return  `User.${fieldName}`;
     }
 
-    getNameWithCustomRelationshipSuffix(): string {
+    public getNameWithCustomRelationshipSuffix(): string {
         let apiName = this.sObjectField.getApiName()
         return apiName.slice(0,-1).concat('c');
     }
 
-    getNameAsCPQField (originalObject: string): string {
+    public getNameAsCPQField (originalObject: string): string {
 
         const cpqMapping = require('../mappings/cpq');
 
@@ -84,6 +88,20 @@ class SObjectFieldParser{
     
         return `${apiName ? apiName : relationshipName}.${field}`
     
+    }
+
+    public removeMergeFieldPrefix(apiName: string): string{
+        let nameWithoutPrefix = apiName.startsWith('$') ? apiName.substring(1) : apiName;
+        return nameWithoutPrefix;
+    }
+}
+
+class ObjectTypeParser{
+
+    private token: string;
+
+    constructor(token: string){
+        this.token = token;
     }
 
 }
