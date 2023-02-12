@@ -11,6 +11,50 @@ interface Parsable{
     parse():Metadata[]
 }
 
+class GenericObject implements Parsable{
+
+    constructor(private name:string){
+
+    }
+
+    private isCustomMetadataObject():boolean{
+        return this.name.toUpperCase().includes('__MDT');
+    }
+
+    private isCustomObject():boolean{
+        return this.name.toUpperCase().endsWith('__C');
+    }
+
+    public parse(): Metadata[] {
+
+        let metadatas: Metadata[] = [];
+
+        if(this.isCustomMetadataObject()){
+
+            metadatas.push({
+                type: MetadataType.CUSTOM_METADATA_TYPE,
+                instance: this.name
+            })
+        }
+        else if(this.isCustomObject()){
+
+            metadatas.push({
+                type: MetadataType.CUSTOM_OBJECT,
+                instance: this.name
+            })
+        }
+        else{
+            metadatas.push({
+                type: MetadataType.STANDARD_OBJECT,
+                instance: this.name
+            })
+        }
+
+        return metadatas;
+    }
+
+}
+
 class SObject implements Parsable{
 
     constructor(protected objectName: string){
@@ -37,7 +81,7 @@ class SObject implements Parsable{
     }
 }
 
-class Field{
+class Field implements Parsable{
 
     parentObject: SObject;
     
@@ -73,12 +117,12 @@ class Field{
         return this.fieldName.toUpperCase().endsWith('__C');
     }
 
-    public parse(): Metadata{
+    public parse(): Metadata[]{
 
-        return {
+        return [{
             type: (this.isCustom() ? MetadataType.CUSTOM_FIELD : MetadataType.STANDARD_FIELD ),
             instance: this.getApiName()
-        }
+        }]
     }
 }
 
@@ -148,7 +192,7 @@ class RelationshipField{
     }
 }
 
-class CustomMetadataType{
+class CustomMetadataType implements Parsable{
 
     name: string;
 
@@ -160,12 +204,36 @@ class CustomMetadataType{
         return token.toUpperCase().includes('__MDT');
     }
 
-    public parse(): Metadata{
+    public parse(): Metadata[]{
 
-        return {
-            type: MetadataType.CUSTOM_METADATA_TYPE,
-            instance: this.name
-        }
+         //$CustomMetadata.Trigger_Context_Status__mdt.SRM_Metadata_c.Enable_After_Insert__c
+        let [mdType,sobject,sobjInstance,fieldName] = this.name.split('.');
+
+        let metadatas: Metadata[] = [];
+
+        metadatas.push(...new GenericObject(sobject).parse());
+        metadatas.push(
+            
+            {
+                instance : sobject,
+                type: MetadataType.CUSTOM_METADATA_TYPE
+            }
+            
+        )
+
+        /*return [
+            {
+                instance: createApiName(sobject,sobjInstance),
+                type: MetadataType.CUSTOM_METADATA_TYPE_RECORD
+            },
+            {
+                instance : sobject,
+                type: MetadataType.CUSTOM_METADATA_TYPE
+            },
+            parseField(fieldName,sobject) 
+        ]*/
+
+        return metadatas;
     }
 
 }
@@ -187,18 +255,20 @@ class SObjectType{
         //$ObjectType.Center__c.Fields.My_text_field__c
         let [mdType,objectName,prop,fieldName] = this.name.split('.');
 
-        const Metadatas: Metadata[] = []
+        const metadatas: Metadata[] = []
 
-        if(CustomMetadataType.isTypeOf(objectName)){
-            Metadatas.push(new CustomMetadataType(objectName).parse());
+        metadatas.push(...new GenericObject(objectName).parse());        
+
+       /* if(CustomMetadataType.isTypeOf(objectName)){
+            metadatas.push(...new CustomMetadataType(objectName).parse());
         }
         else{
-            Metadatas.push(...new SObject(objectName).parse());
-        }
+            metadatas.push(...new SObject(objectName).parse());
+        }*/
 
-        Metadatas.push(new Field(objectName,fieldName).parse());
+        metadatas.push(...new Field(objectName,fieldName).parse());
 
-        return Metadatas;       
+        return metadatas;       
 
     }
 }

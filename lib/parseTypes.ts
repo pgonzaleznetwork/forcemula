@@ -14,13 +14,16 @@ function parseType(token: string,originalObjectName: string){
         types.push(...new SObjectType(token).parse());
     }
 
-    /*else if(CustomMetadataType.isTypeOf(token)){
-        types.push(...new CustomMetadataType(token).parse());
-    }*/
-   
-    else if(check.isCustomMetadata(token)){
+    else if(CustomMetadataType.isTypeOf(token)){
+        console.log('values by old parser',transform.parseCustomMetadata(token))
+        console.log('values by new parser',new CustomMetadataType(token).parse());
         types.push(...transform.parseCustomMetadata(token))
+        //types.push(...new CustomMetadataType(token).parse());
     }
+   
+    /*else if(check.isCustomMetadata(token)){
+        types.push(...transform.parseCustomMetadata(token))
+    }*/
 
     else if(check.isCustomLabel(token)){
         types.push(transform.parseCustomLabel(token));
