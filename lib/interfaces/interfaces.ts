@@ -6,7 +6,12 @@ interface Metadata{
     instance: string;
 }
 
-class SObject{
+interface Parsable{
+    isTypeOf?(name: string):boolean;
+    parse():Metadata[]
+}
+
+class SObject implements Parsable{
 
     constructor(protected objectName: string){
     }
@@ -23,12 +28,12 @@ class SObject{
         this.objectName = newName;
     }
 
-    public parse(): Metadata{
+    public parse(): Metadata[]{
 
-        return {
+        return [{
             type: (this.isCustom() ? MetadataType.CUSTOM_OBJECT : MetadataType.STANDARD_OBJECT),
             instance: this.objectName
-        }
+        }]
     }
 }
 
@@ -188,7 +193,7 @@ class SObjectType{
             Metadatas.push(new CustomMetadataType(objectName).parse());
         }
         else{
-            Metadatas.push(new SObject(objectName).parse());
+            Metadatas.push(...new SObject(objectName).parse());
         }
 
         Metadatas.push(new Field(objectName,fieldName).parse());
