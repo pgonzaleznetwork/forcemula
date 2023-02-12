@@ -77,7 +77,7 @@ class Field{
     }
 }
 
-class SObjectFieldParser{
+class RelationshipField{
 
     private sObjectField: Field
 
@@ -211,4 +211,4 @@ class CustomLabelParser{
     }
 }
 
-export {Field,SObjectFieldParser,CustomLabelParser,SObjectType}
+export {Field,RelationshipField,CustomLabelParser,SObjectType,CustomMetadataType}

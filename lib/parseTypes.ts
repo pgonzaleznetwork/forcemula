@@ -1,9 +1,7 @@
-
-
 const {parts,getField,getObject} = require('./utils');
 const check = require('./parser/grammarChecks');
 const transform = require('./parser/transformations');
-const {Field, SObjectFieldParser,CustomLabelParser,SObjectType} = require('../lib/interfaces/interfaces');
+const {Field, RelationshipField,CustomMetadataType,SObjectType} = require('../lib/interfaces/interfaces');
 
 function parseType(token: string,originalObjectName: string){
 
@@ -15,6 +13,10 @@ function parseType(token: string,originalObjectName: string){
     if(SObjectType.isTypeOf(token)){
         types.push(...new SObjectType(token).parse());
     }
+
+    /*else if(CustomMetadataType.isTypeOf(token)){
+        types.push(...new CustomMetadataType(token).parse());
+    }*/
    
     else if(check.isCustomMetadata(token)){
         types.push(...transform.parseCustomMetadata(token))
@@ -56,28 +58,28 @@ function parseType(token: string,originalObjectName: string){
             }
 
             let sObjectField = new Field(baseObjectName,tokenPart);
-            const parser = new SObjectFieldParser(sObjectField);
+            const rField = new RelationshipField(sObjectField);
            
           
             if(!isLastField){
 
-                if(parser.isStandardRelationship()){
-                    sObjectField.setApiName(parser.getNameAsId())
+                if(rField.isStandardRelationship()){
+                    sObjectField.setApiName(rField.getNameAsId())
                 }
                 else{
-                    sObjectField.setApiName(parser.getNameWithCustomRelationshipSuffix());
+                    sObjectField.setApiName(rField.getNameWithCustomRelationshipSuffix());
                 }
             }
 
-            if(parser.isCPQRelationship()){
-                sObjectField.setApiName(parser.getNameAsCPQField(originalObjectName));
+            if(rField.isCPQRelationship()){
+                sObjectField.setApiName(rField.getNameAsCPQField(originalObjectName));
             }
 
-            else if(parser.isUserField()){
-                sObjectField.setApiName(parser.getNameAsUserField());
+            else if(rField.isUserField()){
+                sObjectField.setApiName(rField.getNameAsUserField());
             }
 
-            else if(parser.isParentField()){
+            else if(rField.isParentField()){
 
                 if(lastKnownParentName == ''){
                     lastKnownParentName = baseObjectName;
