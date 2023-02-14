@@ -209,31 +209,15 @@ class CustomMetadataType implements Parsable{
          //$CustomMetadata.Trigger_Context_Status__mdt.SRM_Metadata_c.Enable_After_Insert__c
         let [mdType,sobject,sobjInstance,fieldName] = this.name.split('.');
 
-        let metadatas: Metadata[] = [];
-
-        metadatas.push(...new GenericObject(sobject).parse());
-        metadatas.push(
-            
+        return [
+            ...new GenericObject(sobject).parse(),
+            ...new Field(sobject,fieldName).parse(),
             {
-                instance : sobject,
-                type: MetadataType.CUSTOM_METADATA_TYPE
-            }
-            
-        )
-
-        /*return [
-            {
-                instance: createApiName(sobject,sobjInstance),
+                instance: `${sobject}.${sobjInstance}`,
                 type: MetadataType.CUSTOM_METADATA_TYPE_RECORD
-            },
-            {
-                instance : sobject,
-                type: MetadataType.CUSTOM_METADATA_TYPE
-            },
-            parseField(fieldName,sobject) 
-        ]*/
+            }
+        ]
 
-        return metadatas;
     }
 
 }
@@ -255,20 +239,10 @@ class SObjectType{
         //$ObjectType.Center__c.Fields.My_text_field__c
         let [mdType,objectName,prop,fieldName] = this.name.split('.');
 
-        const metadatas: Metadata[] = []
-
-        metadatas.push(...new GenericObject(objectName).parse());        
-
-       /* if(CustomMetadataType.isTypeOf(objectName)){
-            metadatas.push(...new CustomMetadataType(objectName).parse());
-        }
-        else{
-            metadatas.push(...new SObject(objectName).parse());
-        }*/
-
-        metadatas.push(...new Field(objectName,fieldName).parse());
-
-        return metadatas;       
+        return [
+            ...new GenericObject(objectName).parse(),
+            ...new Field(objectName,fieldName).parse()
+        ]
 
     }
 }
