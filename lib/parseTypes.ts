@@ -1,7 +1,7 @@
 const {parts,getField,getObject} = require('./utils');
 const check = require('./parser/grammarChecks');
 const transform = require('./parser/transformations');
-const {Field, RelationshipField,CustomMetadataType,SObjectType} = require('../lib/interfaces/interfaces');
+const {FieldAdapter, RelationshipField,CustomMetadataTypeRecordAdapter,SObjectTypeAdapter} = require('../lib/interfaces/interfaces');
 
 function parseType(token: string,originalObjectName: string){
 
@@ -10,12 +10,12 @@ function parseType(token: string,originalObjectName: string){
     //this order matters, we have to evaluate object types before anything else because the syntax can be extremely similar to other types
 
 
-    if(SObjectType.isTypeOf(token)){
-        types.push(...new SObjectType(token).parse());
+    if(SObjectTypeAdapter.isTypeOf(token)){
+        types.push(...new SObjectTypeAdapter(token).transform());
     }
 
-    else if(CustomMetadataType.isTypeOf(token)){
-        types.push(...new CustomMetadataType(token).parse());
+    else if(CustomMetadataTypeRecordAdapter.isTypeOf(token)){
+        types.push(...new CustomMetadataTypeRecordAdapter(token).transform());
     }
    
     else if(check.isCustomLabel(token)){
@@ -53,7 +53,7 @@ function parseType(token: string,originalObjectName: string){
                 baseObjectName = lastKnownParentName;
             }
 
-            let sObjectField = new Field(baseObjectName,tokenPart);
+            let sObjectField = new FieldAdapter(baseObjectName,tokenPart);
             const rField = new RelationshipField(sObjectField);
            
           
@@ -81,7 +81,7 @@ function parseType(token: string,originalObjectName: string){
                     lastKnownParentName = baseObjectName;
                 }
                 else{
-                    let relationshipField = new Field(lastKnownParentName,sObjectField.getFieldName());
+                    let relationshipField = new FieldAdapter(lastKnownParentName,sObjectField.getFieldName());
                     sObjectField.setApiName(relationshipField.getApiName());
                     
                 }
@@ -93,11 +93,11 @@ function parseType(token: string,originalObjectName: string){
 
     else{      
         //we reach here if the formula is a single field, like "Name", which is valid syntax
-        let sObjectField = new Field(originalObjectName,token);
+        let sObjectField = new FieldAdapter(originalObjectName,token);
         parseField(sObjectField);
     }
 
-    function parseField(sObjectField: InstanceType<typeof Field>){
+    function parseField(sObjectField: InstanceType<typeof FieldAdapter>){
 
         sObjectField.setApiName(sObjectField.getApiName())
 

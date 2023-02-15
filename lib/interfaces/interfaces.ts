@@ -6,47 +6,52 @@ interface Metadata{
     instance: string;
 }
 
-interface Parsable{
+interface MetadataTypeAdapter{
     isTypeOf?(name: string):boolean;
-    parse():Metadata[]
+    transform():Metadata[]
 }
 
-class GenericObject implements Parsable{
+class CustomEntity{
 
-    constructor(private name:string){
+    public static isTypeOf(name: string): boolean{
+        return name.toUpperCase().endsWith('__C');
+    }
+
+}
+
+class GenericObjectAdapter implements MetadataTypeAdapter{
+
+    constructor(private _name:string){
 
     }
 
-    private isCustomMetadataObject():boolean{
-        return this.name.toUpperCase().includes('__MDT');
+    public get name():string{
+        return this._name
     }
 
-    private isCustomObject():boolean{
-        return this.name.toUpperCase().endsWith('__C');
+    public set name(newName: string){
+        this._name = newName
     }
 
-    public parse(): Metadata[] {
+    public transform(): Metadata[] {
 
         let metadatas: Metadata[] = [];
 
-        if(this.isCustomMetadataObject()){
+        if(CustomMetadataTypeObjectAdapter.isTypeOf(this._name)){
 
-            metadatas.push({
-                type: MetadataType.CUSTOM_METADATA_TYPE,
-                instance: this.name
-            })
+            metadatas.push(...new CustomMetadataTypeObjectAdapter(this.name).transform());
         }
-        else if(this.isCustomObject()){
+        else if(CustomEntity.isTypeOf(this._name)){
 
             metadatas.push({
                 type: MetadataType.CUSTOM_OBJECT,
-                instance: this.name
+                instance: this._name
             })
         }
         else{
             metadatas.push({
                 type: MetadataType.STANDARD_OBJECT,
-                instance: this.name
+                instance: this._name
             })
         }
 
@@ -55,46 +60,20 @@ class GenericObject implements Parsable{
 
 }
 
-class SObject implements Parsable{
+class FieldAdapter implements MetadataTypeAdapter{
 
-    constructor(protected objectName: string){
-    }
-
-    public isCustom(): boolean{
-        return this.objectName.toUpperCase().endsWith('__C');
-    }
-
-    public getName(): string{
-        return this.objectName;
-    }
-
-    public setName(newName: string): void{
-        this.objectName = newName;
-    }
-
-    public parse(): Metadata[]{
-
-        return [{
-            type: (this.isCustom() ? MetadataType.CUSTOM_OBJECT : MetadataType.STANDARD_OBJECT),
-            instance: this.objectName
-        }]
-    }
-}
-
-class Field implements Parsable{
-
-    parentObject: SObject;
+    private parentObject: GenericObjectAdapter;
     
     constructor(protected objectName: string, protected fieldName: string){
-        this.parentObject = new SObject(objectName);
+        this.parentObject = new GenericObjectAdapter(objectName);
     }
 
     public getApiName(): string{
-        return `${this.parentObject.getName()}.${this.fieldName}`;
+        return `${this.parentObject.name}.${this.fieldName}`;
     }
 
     public getObjectName(): string{
-        return this.parentObject.getName();
+        return this.parentObject.name;
     }
 
     public getFieldName(): string{
@@ -105,7 +84,7 @@ class Field implements Parsable{
 
         if(newApiName.includes('.')){
             const [newObjectName,newFieldName] = newApiName.split('.');
-            this.parentObject.setName(newObjectName);
+            this.parentObject.name = newObjectName;
             this.fieldName = newFieldName;
         }
         else{
@@ -113,14 +92,10 @@ class Field implements Parsable{
         }
     }
 
-    public isCustom(): boolean{
-        return this.fieldName.toUpperCase().endsWith('__C');
-    }
-
-    public parse(): Metadata[]{
+    public transform(): Metadata[]{
 
         return [{
-            type: (this.isCustom() ? MetadataType.CUSTOM_FIELD : MetadataType.STANDARD_FIELD ),
+            type: (CustomEntity.isTypeOf(this.fieldName) ? MetadataType.CUSTOM_FIELD : MetadataType.STANDARD_FIELD ),
             instance: this.getApiName()
         }]
     }
@@ -128,9 +103,9 @@ class Field implements Parsable{
 
 class RelationshipField{
 
-    private sObjectField: Field
+    private sObjectField: FieldAdapter
 
-    constructor(sObjectField: Field){
+    constructor(sObjectField: FieldAdapter){
         this.sObjectField = sObjectField;
         this.sObjectField.setApiName(this.removeMergeFieldPrefix(this.sObjectField.getApiName()));
     }
@@ -192,7 +167,30 @@ class RelationshipField{
     }
 }
 
-class CustomMetadataType implements Parsable{
+class CustomMetadataTypeObjectAdapter implements MetadataTypeAdapter{
+
+    name:string;
+
+    constructor(name: string){
+        this.name = name;
+    }
+
+    public static isTypeOf(name: string): boolean{
+        return name.toUpperCase().endsWith('__MDT');
+    }
+
+    public transform(): Metadata[]{
+
+       return [
+           {
+               type: MetadataType.CUSTOM_METADATA_TYPE,
+               instance: this.name
+           }
+       ]
+   }
+}
+
+class CustomMetadataTypeRecordAdapter implements MetadataTypeAdapter{
 
     name: string;
 
@@ -200,18 +198,26 @@ class CustomMetadataType implements Parsable{
         this.name = name;
     }
 
-    public static isTypeOf(token: string): boolean{
-        return token.toUpperCase().includes('__MDT');
+    public static isTypeOf(name: string): boolean{
+
+        //needs to match this format
+        //$CustomMetadata.Trigger_Context_Status__mdt.SRM_Metadata_c.Enable_After_Insert__c
+
+        let parts: string[] = name.split('.');
+        let [mdType,sobject,sobjInstance,fieldName] = parts;
+
+        return (parts.length === 4 && sobject.toUpperCase().endsWith('__MDT'));
     }
 
-    public parse(): Metadata[]{
+    public transform(): Metadata[]{
 
          //$CustomMetadata.Trigger_Context_Status__mdt.SRM_Metadata_c.Enable_After_Insert__c
         let [mdType,sobject,sobjInstance,fieldName] = this.name.split('.');
 
         return [
-            ...new GenericObject(sobject).parse(),
-            ...new Field(sobject,fieldName).parse(),
+
+            ...new FieldAdapter(sobject,fieldName).transform(),
+            ...new CustomMetadataTypeObjectAdapter(sobject).transform(),
             {
                 instance: `${sobject}.${sobjInstance}`,
                 type: MetadataType.CUSTOM_METADATA_TYPE_RECORD
@@ -222,7 +228,7 @@ class CustomMetadataType implements Parsable{
 
 }
 
-class SObjectType{
+class SObjectTypeAdapter{
 
     name: string;
 
@@ -230,24 +236,31 @@ class SObjectType{
         this.name = name;
     }
 
-    public static isTypeOf(token: string): boolean{
-        return token.toUpperCase().startsWith('$OBJECTTYPE.');
+    public static isTypeOf(name: string): boolean{
+
+        //needs to match this format
+        //$ObjectType.Center__c.Fields.My_text_field__c
+
+        let parts: string[] = name.split('.');
+        let [mdType,objectName,prop,fieldName] = parts;
+
+        return (parts.length === 4 && (mdType.toUpperCase() == '$OBJECTTYPE'));
     }
 
-    public parse(): Metadata[]{
+    public transform(): Metadata[]{
 
         //$ObjectType.Center__c.Fields.My_text_field__c
         let [mdType,objectName,prop,fieldName] = this.name.split('.');
 
         return [
-            ...new GenericObject(objectName).parse(),
-            ...new Field(objectName,fieldName).parse()
+            ...new GenericObjectAdapter(objectName).transform(),
+            ...new FieldAdapter(objectName,fieldName).transform()
         ]
 
     }
 }
 
-class CustomLabelParser{
+class CustomLabeltransformr{
 
     name: string;
 
@@ -260,4 +273,4 @@ class CustomLabelParser{
     }
 }
 
-export {Field,RelationshipField,CustomLabelParser,SObjectType,CustomMetadataType}
+export {FieldAdapter,RelationshipField,CustomLabeltransformr,SObjectTypeAdapter,CustomMetadataTypeRecordAdapter}
