@@ -1,4 +1,5 @@
 const MetadataType = require('../MetadataTypes');
+const grammar = require('../parser/grammar');
 
 interface Metadata{
     //refactor to enum
@@ -66,6 +67,24 @@ class GenericObjectAdapter implements MetadataTypeAdapter{
 
 }
 
+class Field{
+
+    public isTypeOf(expression: string){
+
+        expression = expression.toUpperCase();
+
+        if(
+            !grammar.operators.includes(expression)
+            && !grammar.functions.includes(expression)
+            && !['$LABEL.','$SETUP.','$OBJECTTYPE.'].includes(expression)   
+        ){
+            return true;
+        }
+        return false;
+    }
+
+}
+
 class FieldAdapter implements MetadataTypeAdapter{
 
     private parentObject: GenericObjectAdapter;
@@ -113,7 +132,9 @@ class RelationshipField{
 
     constructor(sObjectField: FieldAdapter){
         this.sObjectField = sObjectField;
-        this.sObjectField.setApiName(this.removeMergeFieldPrefix(this.sObjectField.getApiName()));
+        //console.log('=======')
+        //console.log(this.sObjectField.getObjectName())
+        this.sObjectField.setApiName(this.sObjectField.getApiName());
     }
 
     private RELATIONSHIP_SUFFIX = '__R';

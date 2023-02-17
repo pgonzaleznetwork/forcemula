@@ -2,6 +2,7 @@ const parseType = require('../lib/parseTypes');
 const _ = require('../lib/utils');
 const check = require('../lib/parser/grammarChecks')
 const MetadataType = require('../lib/MetadataTypes');
+const transform = require('../lib/parser/transformations');
 
 type ParseRequest = {
     parentObject:string,
@@ -89,6 +90,7 @@ function parse(request:ParseRequest){
 
         
         else{
+
             types.push(...parseType(token,parentObject));
         }
 

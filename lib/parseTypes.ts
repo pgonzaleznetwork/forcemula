@@ -31,11 +31,17 @@ function parseType(token: string,originalObjectName: string){
    
     else if(check.isRelationshipField(token)){
 
+       // console.log('===============')
+
         let lastKnownParentName: string = '';
 
         parts(token).forEach((tokenPart: string,index: number,tokenParts: string[]) => {
 
-            if(check.isSpecialPrefix(tokenPart) || check.isProcessBuilderPrefix(tokenPart)) return;
+           // console.log(tokenPart)
+
+            if(check.isSpecialPrefix(tokenPart) || check.isProcessBuilderPrefix(tokenPart)) {
+                return;
+            }
             
             let baseObjectName: string = '';
             let isLastField: boolean = (tokenParts.length-1 == index);
@@ -47,7 +53,10 @@ function parseType(token: string,originalObjectName: string){
 
                 baseObjectName = tokenParts[index-1];
 
+               // console.log('now base object is ',baseObjectName)
+
                 if(check.isProcessBuilderPrefix(baseObjectName)){
+                    console.log('its process builder again ',baseObjectName)
                     baseObjectName = transform.removeFirstAndLastChars(baseObjectName);
                 }
             }
@@ -55,6 +64,11 @@ function parseType(token: string,originalObjectName: string){
             if(check.isParent(baseObjectName) && lastKnownParentName != ''){
                 baseObjectName = lastKnownParentName;
             }
+
+            console.log('about to create field class with ',baseObjectName,'.',tokenPart)
+            baseObjectName = baseObjectName.startsWith('$') ? baseObjectName.substring(1) : baseObjectName;
+            //tokenPart = transform.removePrefix(tokenPart)
+            console.log('AFTER about to create field class with ',baseObjectName,'.',tokenPart)
 
             let sObjectField = new FieldAdapter(baseObjectName,tokenPart);
             const rField = new RelationshipField(sObjectField);
