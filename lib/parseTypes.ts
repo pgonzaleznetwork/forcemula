@@ -3,6 +3,7 @@ const check = require('./parser/grammarChecks');
 const transform = require('./parser/transformations');
 const {FieldAdapter, RelationshipField,
     CustomLabelAdapter,CustomMetadataTypeRecordAdapter,
+    CustomSettingAdapter,
     SObjectTypeAdapter} = require('../lib/interfaces/interfaces');
 
 function parseType(token: string,originalObjectName: string){
@@ -24,20 +25,20 @@ function parseType(token: string,originalObjectName: string){
         types.push(...new CustomLabelAdapter(token).transform());
     }
 
-    else if(check.isCustomSetting(token)){
-        types.push(...transform.parseCustomSetting(token))
+    else if(CustomSettingAdapter.isTypeOf(token)){
+        types.push(...new CustomSettingAdapter(token).transform());
     }
    
     else if(check.isRelationshipField(token)){
 
-        let lastKnownParentName = '';
+        let lastKnownParentName: string = '';
 
-        parts(token).forEach((tokenPart,index,tokenParts) => {
+        parts(token).forEach((tokenPart: string,index: number,tokenParts: string[]) => {
 
             if(check.isSpecialPrefix(tokenPart) || check.isProcessBuilderPrefix(tokenPart)) return;
             
-            let baseObjectName = '';
-            let isLastField = (tokenParts.length-1 == index);
+            let baseObjectName: string = '';
+            let isLastField: boolean = (tokenParts.length-1 == index);
 
             if(index == 0){
                 baseObjectName = originalObjectName;
