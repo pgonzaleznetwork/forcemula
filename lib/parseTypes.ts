@@ -28,48 +28,37 @@ function parseType(token: string,originalObjectName: string){
     else if(CustomSettingAdapter.isTypeOf(token)){
         types.push(...new CustomSettingAdapter(token).transform());
     }
-   
+
+    
     else if(check.isRelationshipField(token)){
 
-       // console.log('===============')
-
+        token = removeProcessBuilderPrefix(token)
+  
         let lastKnownParentName: string = '';
 
         parts(token).forEach((tokenPart: string,index: number,tokenParts: string[]) => {
 
-           // console.log(tokenPart)
-
-            if(check.isSpecialPrefix(tokenPart) || check.isProcessBuilderPrefix(tokenPart)) {
-                return;
-            }
-            
             let baseObjectName: string = '';
             let isLastField: boolean = (tokenParts.length-1 == index);
-
-            if(index == 0){
+    
+            //$User, $Profile, etc
+            if(tokenPart.startsWith('$')){
+                baseObjectName = tokenPart;
+            }
+     
+            else if(index == 0){
                 baseObjectName = originalObjectName;
             }
             else{
-
                 baseObjectName = tokenParts[index-1];
-
-               // console.log('now base object is ',baseObjectName)
-
-                if(check.isProcessBuilderPrefix(baseObjectName)){
-                    console.log('its process builder again ',baseObjectName)
-                    baseObjectName = transform.removeFirstAndLastChars(baseObjectName);
-                }
             }
 
             if(check.isParent(baseObjectName) && lastKnownParentName != ''){
                 baseObjectName = lastKnownParentName;
             }
 
-            console.log('about to create field class with ',baseObjectName,'.',tokenPart)
-            baseObjectName = baseObjectName.startsWith('$') ? baseObjectName.substring(1) : baseObjectName;
-            //tokenPart = transform.removePrefix(tokenPart)
-            console.log('AFTER about to create field class with ',baseObjectName,'.',tokenPart)
-
+            baseObjectName = removeDollarSign(baseObjectName);
+        
             let sObjectField = new FieldAdapter(baseObjectName,tokenPart);
             const rField = new RelationshipField(sObjectField);
            
@@ -124,6 +113,32 @@ function parseType(token: string,originalObjectName: string){
     
     return types;
 
+}
+
+/**
+ * 
+ * Removes $ from special objects such as $User, $Profile, etc
+ */
+function removeDollarSign(objectName: string): string{
+    return objectName.startsWith('$') ? objectName.substring(1) : objectName;
+}
+
+/** Removes [Object] from process builder formulas because the base object is duplicated here
+* i.e a process builder formula on the Account would start as [Account].OwnerId
+* we already have the base object so we can discard
+*/
+function removeProcessBuilderPrefix(token: string): string{
+
+    let sanitizedToken: string = token;
+
+    const parts: string[] = token.split('.');
+
+    if(parts[0].startsWith('[') && parts[0].endsWith(']')){
+        parts.shift()
+        sanitizedToken = parts.join('.');
+    }
+
+    return sanitizedToken;
 }
 
 module.exports = parseType;
