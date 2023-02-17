@@ -6,6 +6,12 @@ interface Metadata{
     instance: string;
 }
 
+interface Token{
+    value:string;
+    originalIndex:number;
+    parsedValues:Metadata[]
+}
+
 interface MetadataTypeAdapter{
     isTypeOf?(name: string):boolean;
     transform():Metadata[]
@@ -260,17 +266,39 @@ class SObjectTypeAdapter{
     }
 }
 
-class CustomLabeltransformr{
+class CustomLabelAdapter implements MetadataTypeAdapter{
 
     name: string;
 
     constructor(name: string){
-        this.name = name;
+
+        if(!CustomLabelAdapter.isTypeOf(name)){
+            throw new Error(`${name} is not a valid instance of a Custom Label`);
+        }
+        else{
+            this.name = name;
+        }
     }
 
-    public static isTypeOf(token: string): boolean{
-        return token.toUpperCase().startsWith('$LABEL.');
+    public static isTypeOf(name: string): boolean{
+
+        const parts = name.toUpperCase().split('.');
+        return parts.length === 2 && parts[0] === '$LABEL';
+    }
+
+    public transform(): Metadata[] {
+
+        const parts = this.name.split('.');
+
+        return [
+            {
+            type:MetadataType.CUSTOM_LABEL,
+            instance: parts[1]
+            }
+        ]
     }
 }
 
-export {FieldAdapter,RelationshipField,CustomLabeltransformr,SObjectTypeAdapter,CustomMetadataTypeRecordAdapter}
+export {FieldAdapter,RelationshipField,
+    CustomLabelAdapter,
+    SObjectTypeAdapter,CustomMetadataTypeRecordAdapter}

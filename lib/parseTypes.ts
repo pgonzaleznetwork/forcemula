@@ -1,7 +1,9 @@
 const {parts,getField,getObject} = require('./utils');
 const check = require('./parser/grammarChecks');
 const transform = require('./parser/transformations');
-const {FieldAdapter, RelationshipField,CustomMetadataTypeRecordAdapter,SObjectTypeAdapter} = require('../lib/interfaces/interfaces');
+const {FieldAdapter, RelationshipField,
+    CustomLabelAdapter,CustomMetadataTypeRecordAdapter,
+    SObjectTypeAdapter} = require('../lib/interfaces/interfaces');
 
 function parseType(token: string,originalObjectName: string){
 
@@ -18,8 +20,8 @@ function parseType(token: string,originalObjectName: string){
         types.push(...new CustomMetadataTypeRecordAdapter(token).transform());
     }
    
-    else if(check.isCustomLabel(token)){
-        types.push(transform.parseCustomLabel(token));
+    else if(CustomLabelAdapter.isTypeOf(token)){
+        types.push(...new CustomLabelAdapter(token).transform());
     }
 
     else if(check.isCustomSetting(token)){
