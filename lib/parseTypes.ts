@@ -70,8 +70,6 @@ function parseType(token: string,sourceObjectName: string){
             let fieldApiName = `${baseObjectName}.${field}`;
         
             let sObjectField = new FieldAdapter(baseObjectName,field);
-            const rField = new RelationshipField(sObjectField);
-           
           
             if(!isLastField){
 
@@ -90,23 +88,34 @@ function parseType(token: string,sourceObjectName: string){
             //Account.SBQQ__OriginalOppty__r.
             if(baseObjectName.toUpperCase().startsWith('SBQQ__') && baseObjectName.toUpperCase().endsWith('__R')){
                 //TO DO REPLACE WITH GENERIC FUNCTION TO GET MAPPING
-                sObjectField.setApiName(rField.getNameAsCPQField(sourceObjectName));
+                //sObjectField.setApiName(rField.getNameAsCPQField(sourceObjectName));
+
+                const cpqMapping = require('./mappings/cpq');
+
+                const [relationshipName,field] = sObjectField.getApiName().split('.');
+        
+                let apiName = cpqMapping[sourceObjectName.toUpperCase()]?.[relationshipName.toUpperCase()];
+            
+                let newName = `${apiName ? apiName : relationshipName}.${field}`
+
+                sObjectField.setApiName(newName);
             }
 
             //Owner.Manager__c
             else if(['OWNER','MANAGER','CREATEDBY','LASTMODIFIEDBY'].includes(baseObjectName.toUpperCase())){
                 //becomes User.Manager__c
-                sObjectField.setApiName(rField.getNameAsUserField());
+                sObjectField.setApiName(`User.${sObjectField.getFieldName()}`)
+                //sObjectField.setApiName(rField.getNameAsUserField());
             }
 
-            else if(rField.isParentField()){
+            else if(sObjectField.getFieldName().toUpperCase() === 'PARENTID'){
 
                 if(lastKnownParentName == ''){
                     lastKnownParentName = baseObjectName;
                 }
                 else{
-                    let relationshipField = new FieldAdapter(lastKnownParentName,sObjectField.getFieldName());
-                    sObjectField.setApiName(relationshipField.getApiName());
+                    //let relationshipField = new FieldAdapter(lastKnownParentName,sObjectField.getFieldName());
+                    sObjectField.setApiName(`${lastKnownParentName}.${sObjectField.getFieldName()}`);
                     
                 }
             }
@@ -122,8 +131,6 @@ function parseType(token: string,sourceObjectName: string){
     }
 
     function parseField(sObjectField: InstanceType<typeof FieldAdapter>){
-
-        sObjectField.setApiName(sObjectField.getApiName())
 
         types.push(transform.parseField(sObjectField.getApiName()));
         types.push(transform.parseObject(sObjectField.getObjectName()));
