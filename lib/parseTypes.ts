@@ -6,7 +6,7 @@ const {FieldAdapter, RelationshipField,
     CustomSettingAdapter,
     SObjectTypeAdapter} = require('../lib/interfaces/interfaces');
 
-function parseType(token: string,originalObjectName: string){
+function parseType(token: string,sourceObjectName: string){
 
     let types = []
 
@@ -36,48 +36,66 @@ function parseType(token: string,originalObjectName: string){
   
         let lastKnownParentName: string = '';
 
-        parts(token).forEach((tokenPart: string,index: number,tokenParts: string[]) => {
+        const fields: string[] = token.split('.');
 
+        fields.forEach((field: string,index: number,fields: string[]) => {
+
+            /**
+             * The object at the start of the relationship tree i.e {Account}.Owner.FirstName 
+             * */ 
             let baseObjectName: string = '';
-            let isLastField: boolean = (tokenParts.length-1 == index);
+            let isLastField: boolean = (fields.length-1 == index);
     
             //$User, $Profile, etc
-            if(tokenPart.startsWith('$')){
-                baseObjectName = tokenPart;
+            if(field.startsWith('$')){
+                baseObjectName = field;
             }
      
             else if(index == 0){
-                baseObjectName = originalObjectName;
+                baseObjectName = sourceObjectName;
             }
             else{
-                baseObjectName = tokenParts[index-1];
+                //if we are on any field other than the first one, the base object becomes the previous
+                //field in the relationship tree, for example if the relationship was Account.Owner
+                //and the current field is Owner, the base object becomes Account
+                baseObjectName = fields[index-1];
             }
 
-            if(check.isParent(baseObjectName) && lastKnownParentName != ''){
+            if(baseObjectName.toUpperCase() === 'PARENT' && lastKnownParentName != ''){
                 baseObjectName = lastKnownParentName;
             }
 
             baseObjectName = removeDollarSign(baseObjectName);
+
+            let fieldApiName = `${baseObjectName}.${field}`;
         
-            let sObjectField = new FieldAdapter(baseObjectName,tokenPart);
+            let sObjectField = new FieldAdapter(baseObjectName,field);
             const rField = new RelationshipField(sObjectField);
            
           
             if(!isLastField){
 
-                if(rField.isStandardRelationship()){
-                    sObjectField.setApiName(rField.getNameAsId())
+                //Account.Oppty__r
+                if(fieldApiName.toUpperCase().endsWith('__R')){
+                   //becomes Account.Oppty__c
+                    sObjectField.setApiName(fieldApiName.slice(0,-1).concat('c'));
                 }
+                //Account.Opportunity.
                 else{
-                    sObjectField.setApiName(rField.getNameWithCustomRelationshipSuffix());
+                    //becomes Account.OpportunityId
+                    sObjectField.setApiName(fieldApiName+='Id');
                 }
             }
 
-            if(rField.isCPQRelationship()){
-                sObjectField.setApiName(rField.getNameAsCPQField(originalObjectName));
+            //Account.SBQQ__OriginalOppty__r.
+            if(baseObjectName.toUpperCase().startsWith('SBQQ__') && baseObjectName.toUpperCase().endsWith('__R')){
+                //TO DO REPLACE WITH GENERIC FUNCTION TO GET MAPPING
+                sObjectField.setApiName(rField.getNameAsCPQField(sourceObjectName));
             }
 
-            else if(rField.isUserField()){
+            //Owner.Manager__c
+            else if(['OWNER','MANAGER','CREATEDBY','LASTMODIFIEDBY'].includes(baseObjectName.toUpperCase())){
+                //becomes User.Manager__c
                 sObjectField.setApiName(rField.getNameAsUserField());
             }
 
@@ -99,7 +117,7 @@ function parseType(token: string,originalObjectName: string){
 
     else{      
         //we reach here if the formula is a single field, like "Name", which is valid syntax
-        let sObjectField = new FieldAdapter(originalObjectName,token);
+        let sObjectField = new FieldAdapter(sourceObjectName,token);
         parseField(sObjectField);
     }
 
