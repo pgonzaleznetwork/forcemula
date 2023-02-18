@@ -89,20 +89,20 @@ class FieldAdapter implements MetadataTypeAdapter{
 
     private parentObject: GenericObjectAdapter;
     
-    constructor(protected objectName: string, protected fieldName: string){
-        this.parentObject = new GenericObjectAdapter(objectName);
+    constructor(protected object: string, protected field: string){
+        this.parentObject = new GenericObjectAdapter(object);
     }
 
     public get fullName(): string{
-        return `${this.parentObject.name}.${this.fieldName}`;
+        return `${this.parentObject.name}.${this.field}`;
     }
 
-    public getObjectName(): string{
+    public get objectName(): string{
         return this.parentObject.name;
     }
 
     public getFieldName(): string{
-        return this.fieldName;
+        return this.field;
     }
 
     public setApiName(newApiName: string): void{
@@ -110,7 +110,7 @@ class FieldAdapter implements MetadataTypeAdapter{
         if(newApiName.includes('.')){
             const [newObjectName,newFieldName] = newApiName.split('.');
             this.parentObject.name = newObjectName;
-            this.fieldName = newFieldName;
+            this.field = newFieldName;
         }
         else{
            throw Error('API names must use dot notation, for example Account.Industry')
@@ -120,7 +120,7 @@ class FieldAdapter implements MetadataTypeAdapter{
     public transform(): Metadata[]{
 
         return [{
-            type: (CustomEntity.isTypeOf(this.fieldName) ? MetadataType.CUSTOM_FIELD : MetadataType.STANDARD_FIELD ),
+            type: (CustomEntity.isTypeOf(this.field) ? MetadataType.CUSTOM_FIELD : MetadataType.STANDARD_FIELD ),
             instance: this.fullName
         }]
     }

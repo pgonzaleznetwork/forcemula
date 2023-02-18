@@ -133,7 +133,7 @@ function parseType(token: string,sourceObjectName: string){
     function parseField(sObjectField: InstanceType<typeof FieldAdapter>){
 
         types.push(transform.parseField(sObjectField.fullName));
-        types.push(transform.parseObject(sObjectField.getObjectName()));
+        types.push(transform.parseObject(sObjectField.objectName));
     }
     
     return types;
