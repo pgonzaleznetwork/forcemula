@@ -93,7 +93,7 @@ class FieldAdapter implements MetadataTypeAdapter{
         this.parentObject = new GenericObjectAdapter(objectName);
     }
 
-    public getApiName(): string{
+    public get fullName(): string{
         return `${this.parentObject.name}.${this.fieldName}`;
     }
 
@@ -121,7 +121,7 @@ class FieldAdapter implements MetadataTypeAdapter{
 
         return [{
             type: (CustomEntity.isTypeOf(this.fieldName) ? MetadataType.CUSTOM_FIELD : MetadataType.STANDARD_FIELD ),
-            instance: this.getApiName()
+            instance: this.fullName
         }]
     }
 }

@@ -92,7 +92,7 @@ function parseType(token: string,sourceObjectName: string){
 
                 const cpqMapping = require('./mappings/cpq');
 
-                const [relationshipName,field] = sObjectField.getApiName().split('.');
+                const [relationshipName,field] = sObjectField.fullName.split('.');
         
                 let apiName = cpqMapping[sourceObjectName.toUpperCase()]?.[relationshipName.toUpperCase()];
             
@@ -132,7 +132,7 @@ function parseType(token: string,sourceObjectName: string){
 
     function parseField(sObjectField: InstanceType<typeof FieldAdapter>){
 
-        types.push(transform.parseField(sObjectField.getApiName()));
+        types.push(transform.parseField(sObjectField.fullName));
         types.push(transform.parseObject(sObjectField.getObjectName()));
     }
     
