@@ -101,7 +101,7 @@ class FieldAdapter implements MetadataTypeAdapter{
         return this.parentObject.name;
     }
 
-    public getFieldName(): string{
+    public get fieldName(): string{
         return this.field;
     }
 

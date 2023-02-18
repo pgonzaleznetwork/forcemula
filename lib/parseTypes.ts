@@ -104,18 +104,18 @@ function parseType(token: string,sourceObjectName: string){
             //Owner.Manager__c
             else if(['OWNER','MANAGER','CREATEDBY','LASTMODIFIEDBY'].includes(baseObjectName.toUpperCase())){
                 //becomes User.Manager__c
-                sObjectField.setApiName(`User.${sObjectField.getFieldName()}`)
+                sObjectField.setApiName(`User.${sObjectField.fieldName}`)
                 //sObjectField.setApiName(rField.getNameAsUserField());
             }
 
-            else if(sObjectField.getFieldName().toUpperCase() === 'PARENTID'){
+            else if(sObjectField.fieldName.toUpperCase() === 'PARENTID'){
 
                 if(lastKnownParentName == ''){
                     lastKnownParentName = baseObjectName;
                 }
                 else{
-                    //let relationshipField = new FieldAdapter(lastKnownParentName,sObjectField.getFieldName());
-                    sObjectField.setApiName(`${lastKnownParentName}.${sObjectField.getFieldName()}`);
+                    //let relationshipField = new FieldAdapter(lastKnownParentName,sObjectField.fieldName);
+                    sObjectField.setApiName(`${lastKnownParentName}.${sObjectField.fieldName}`);
                     
                 }
             }
