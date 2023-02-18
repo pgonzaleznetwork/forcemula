@@ -1,7 +1,7 @@
 const {parts,getField,getObject} = require('./utils');
 const check = require('./parser/grammarChecks');
 const transform = require('./parser/transformations');
-const {FieldAdapter, RelationshipField,
+const {FieldAdapter,
     CustomLabelAdapter,CustomMetadataTypeRecordAdapter,
     CustomSettingAdapter,
     SObjectTypeAdapter} = require('../lib/interfaces/interfaces');
