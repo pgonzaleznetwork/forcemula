@@ -105,7 +105,7 @@ class FieldAdapter implements MetadataTypeAdapter{
         return this.field;
     }
 
-    public setApiName(newApiName: string): void{
+    public set fullName(newApiName: string){
 
         if(newApiName.includes('.')){
             const [newObjectName,newFieldName] = newApiName.split('.');

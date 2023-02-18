@@ -76,19 +76,21 @@ function parseType(token: string,sourceObjectName: string){
                 //Account.Oppty__r
                 if(fieldApiName.toUpperCase().endsWith('__R')){
                    //becomes Account.Oppty__c
-                    sObjectField.setApiName(fieldApiName.slice(0,-1).concat('c'));
+                    sObjectField.fullName = fieldApiName.slice(0,-1).concat('c');
                 }
                 //Account.Opportunity.
                 else{
                     //becomes Account.OpportunityId
-                    sObjectField.setApiName(fieldApiName+='Id');
+                    sObjectField.fullName = fieldApiName+='Id';
                 }
             }
 
             //Account.SBQQ__OriginalOppty__r.
-            if(baseObjectName.toUpperCase().startsWith('SBQQ__') && baseObjectName.toUpperCase().endsWith('__R')){
+            if(baseObjectName.toUpperCase().startsWith('SBQQ__') 
+            && baseObjectName.toUpperCase().endsWith('__R'))
+            {
                 //TO DO REPLACE WITH GENERIC FUNCTION TO GET MAPPING
-                //sObjectField.setApiName(rField.getNameAsCPQField(sourceObjectName));
+                //sObjectField.fullName = rField.getNameAsCPQField(sourceObjectName));
 
                 const cpqMapping = require('./mappings/cpq');
 
@@ -98,14 +100,17 @@ function parseType(token: string,sourceObjectName: string){
             
                 let newName = `${apiName ? apiName : relationshipName}.${field}`
 
-                sObjectField.setApiName(newName);
+                sObjectField.fullName = newName;
             }
 
             //Owner.Manager__c
-            else if(['OWNER','MANAGER','CREATEDBY','LASTMODIFIEDBY'].includes(baseObjectName.toUpperCase())){
+            else if(
+                ['OWNER','MANAGER','CREATEDBY','LASTMODIFIEDBY'].
+                includes(baseObjectName.toUpperCase()))
+            {
                 //becomes User.Manager__c
-                sObjectField.setApiName(`User.${sObjectField.fieldName}`)
-                //sObjectField.setApiName(rField.getNameAsUserField());
+                sObjectField.fullName = `User.${sObjectField.fieldName}`
+                //sObjectField.fullName = rField.getNameAsUserField());
             }
 
             else if(sObjectField.fieldName.toUpperCase() === 'PARENTID'){
@@ -115,7 +120,7 @@ function parseType(token: string,sourceObjectName: string){
                 }
                 else{
                     //let relationshipField = new FieldAdapter(lastKnownParentName,sObjectField.fieldName);
-                    sObjectField.setApiName(`${lastKnownParentName}.${sObjectField.fieldName}`);
+                    sObjectField.fullName = `${lastKnownParentName}.${sObjectField.fieldName}`;
                     
                 }
             }
