@@ -7,11 +7,6 @@ interface Metadata{
     instance: string;
 }
 
-interface Token{
-    value:string;
-    originalIndex:number;
-    parsedValues:Metadata[]
-}
 
 interface MetadataTypeAdapter{
     isTypeOf?(name: string):boolean;
