@@ -3,7 +3,7 @@ const check = require('./parser/grammarChecks');
 const transform = require('./parser/transformations');
 const {FieldAdapter,
     CustomLabelAdapter,CustomMetadataTypeRecordAdapter,
-    CustomSettingAdapter,
+    CustomSettingAdapter,MetadataTypeAdapter,
     SObjectTypeAdapter} = require('../lib/interfaces/interfaces');
 
 
@@ -11,130 +11,126 @@ function parseType(token: string,sourceObjectName: string){
 
     let types = []
 
-    //this order matters, we have to evaluate object types before anything else because the syntax can be extremely similar to other types
+    const nonFieldAdapters: MetadataTypeAdapter[] = [
+        CustomLabelAdapter,
+        CustomMetadataTypeRecordAdapter,
+        CustomSettingAdapter,
+        SObjectTypeAdapter
+    ]
 
+    nonFieldAdapters.forEach(adapter => {
+        if(adapter.isTypeOf(token)){
+            types.push(...new adapter(token).transform());
+        }
+    })
 
-    if(CustomMetadataTypeRecordAdapter.isTypeOf(token)){
-        types.push(...new CustomMetadataTypeRecordAdapter(token).transform());
-    }
-
-    else if(SObjectTypeAdapter.isTypeOf(token)){
-        types.push(...new SObjectTypeAdapter(token).transform());
-    }
-
-    else if(CustomSettingAdapter.isTypeOf(token)){
-        types.push(...new CustomSettingAdapter(token).transform());
-    }
-   
-    else if(CustomLabelAdapter.isTypeOf(token)){
-        types.push(...new CustomLabelAdapter(token).transform());
-    }
-
-    
-    else if(check.isRelationshipField(token)){
-
-        token = removeProcessBuilderPrefix(token)
-  
-        let lastKnownParentName: string = '';
-
-        const fields: string[] = token.split('.');
-
-        fields.forEach((field: string,index: number,fields: string[]) => {
-
-            /**
-             * The object at the start of the relationship tree i.e {Account}.Owner.FirstName 
-             * */ 
-            let baseObjectName: string = '';
-            let isLastField: boolean = (fields.length-1 == index);
-    
-            //$User, $Profile, etc
-            if(field.startsWith('$')){
-                baseObjectName = field;
-            }
-     
-            else if(index == 0){
-                baseObjectName = sourceObjectName;
-            }
-            else{
-                //if we are on any field other than the first one, the base object becomes the previous
-                //field in the relationship tree, for example if the relationship was Account.Owner
-                //and the current field is Owner, the base object becomes Account
-                baseObjectName = fields[index-1];
-            }
-
-            if(baseObjectName.toUpperCase() === 'PARENT' && lastKnownParentName != ''){
-                baseObjectName = lastKnownParentName;
-            }
-
-            baseObjectName = removeDollarSign(baseObjectName);
-
-            let fieldApiName = `${baseObjectName}.${field}`;
+    if(types.length == 0){
         
-            let sObjectField = new FieldAdapter(baseObjectName,field);
-          
-            if(!isLastField){
+        if(check.isRelationshipField(token)){
 
-                //Account.Oppty__r
-                if(fieldApiName.endsWithIgnoreCase('__R')){
-                   //becomes Account.Oppty__c
-                    sObjectField.fullName = fieldApiName.slice(0,-1).concat('c');
+            token = removeProcessBuilderPrefix(token)
+      
+            let lastKnownParentName: string = '';
+    
+            const fields: string[] = token.split('.');
+    
+            fields.forEach((field: string,index: number,fields: string[]) => {
+    
+                /**
+                 * The object at the start of the relationship tree i.e {Account}.Owner.FirstName 
+                 * */ 
+                let baseObjectName: string = '';
+                let isLastField: boolean = (fields.length-1 == index);
+        
+                //$User, $Profile, etc
+                if(field.startsWith('$')){
+                    //nothing to do here, we'll evaluate the second part of the field
+                    //i.e $Profile.Name in the next iteration
+                    return;
                 }
-                //Account.Opportunity.
+         
+                else if(index == 0){
+                    baseObjectName = sourceObjectName;
+                }
                 else{
-                    //becomes Account.OpportunityId
-                    sObjectField.fullName = fieldApiName+='Id';
+                    //if we are on any field other than the first one, the base object becomes the previous
+                    //field in the relationship tree, for example if the relationship was Account.Owner
+                    //and the current field is Owner, the base object becomes Account
+                    baseObjectName = fields[index-1];
                 }
-            }
-
-            //Account.SBQQ__OriginalOppty__r.
-            if(baseObjectName.startsWithIgnoreCase('SBQQ__') 
-            && baseObjectName.endsWithIgnoreCase('__R'))
-            {
-                //TO DO REPLACE WITH GENERIC FUNCTION TO GET MAPPING
-                //sObjectField.fullName = rField.getNameAsCPQField(sourceObjectName));
-
-                const cpqMapping = require('./mappings/cpq');
-
-                const [relationshipName,field] = sObjectField.fullName.split('.');
-        
-                let apiName = cpqMapping[sourceObjectName.toUpperCase()]?.[relationshipName.toUpperCase()];
+    
+                if(baseObjectName.toUpperCase() === 'PARENT' && lastKnownParentName != ''){
+                    baseObjectName = lastKnownParentName;
+                }
+    
+                baseObjectName = removeDollarSign(baseObjectName);
+    
+                let fieldApiName = `${baseObjectName}.${field}`;
             
-                let newName = `${apiName ? apiName : relationshipName}.${field}`
-
-                sObjectField.fullName = newName;
-            }
-
-            //Owner.Manager__c
-            else if(
-                ['OWNER','MANAGER','CREATEDBY','LASTMODIFIEDBY'].
-                includes(baseObjectName.toUpperCase()))
-            {
-                //becomes User.Manager__c
-                sObjectField.fullName = `User.${sObjectField.fieldName}`
-            }
-
-            else if(sObjectField.fieldName.toUpperCase() === 'PARENTID'){
-
-                if(lastKnownParentName == ''){
-                    lastKnownParentName = baseObjectName;
+                let sObjectField = new FieldAdapter(baseObjectName,field);
+              
+                if(!isLastField){
+    
+                    //Account.Oppty__r
+                    if(fieldApiName.endsWithIgnoreCase('__R')){
+                       //becomes Account.Oppty__c
+                        sObjectField.fullName = fieldApiName.slice(0,-1).concat('c');
+                    }
+                    //Account.Opportunity.
+                    else{
+                        //becomes Account.OpportunityId
+                        sObjectField.fullName = fieldApiName+='Id';
+                    }
                 }
-                else{
-                    sObjectField.fullName = `${lastKnownParentName}.${sObjectField.fieldName}`;
-                    
+    
+                //Account.SBQQ__OriginalOppty__r.
+                if(baseObjectName.startsWithIgnoreCase('SBQQ__') 
+                && baseObjectName.endsWithIgnoreCase('__R'))
+                {
+                    //TO DO REPLACE WITH GENERIC FUNCTION TO GET MAPPING
+                    //sObjectField.fullName = rField.getNameAsCPQField(sourceObjectName));
+    
+                    const cpqMapping = require('./mappings/cpq');
+    
+                    const [relationshipName,field] = sObjectField.fullName.split('.');
+            
+                    let apiName = cpqMapping[sourceObjectName.toUpperCase()]?.[relationshipName.toUpperCase()];
+                
+                    let newName = `${apiName ? apiName : relationshipName}.${field}`
+    
+                    sObjectField.fullName = newName;
                 }
-            }
+    
+                //Owner.Manager__c
+                else if(
+                    ['OWNER','MANAGER','CREATEDBY','LASTMODIFIEDBY'].
+                    includes(baseObjectName.toUpperCase()))
+                {
+                    //becomes User.Manager__c
+                    sObjectField.fullName = `User.${sObjectField.fieldName}`
+                }
+    
+                else if(sObjectField.fieldName.toUpperCase() === 'PARENTID'){
+    
+                    if(lastKnownParentName == ''){
+                        lastKnownParentName = baseObjectName;
+                    }
+                    else{
+                        sObjectField.fullName = `${lastKnownParentName}.${sObjectField.fieldName}`;
+                        
+                    }
+                }
+                types.push(...sObjectField.transform());
+            });
+        }
+    
+        else{      
+            //we reach here if the formula is a single field, like "Name", which is valid syntax
+            let sObjectField = new FieldAdapter(sourceObjectName,token);
             types.push(...sObjectField.transform());
-            //parseField(sObjectField);
-        });
+        }
     }
-
-    else{      
-        //we reach here if the formula is a single field, like "Name", which is valid syntax
-        let sObjectField = new FieldAdapter(sourceObjectName,token);
-        types.push(...sObjectField.transform());
-       // parseField(sObjectField);
-    }
-
+ 
     
     return types;
 

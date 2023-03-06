@@ -68,6 +68,8 @@ test('Standard formula: e2e test', () => {
 
     let result = parse({parentObject:'OpportunityLineItem',formula});
 
+    console.log(result);
+
     let expectedFunctions = [
         'IF','TRUE','FALSE','TEXT'
     ]
@@ -91,9 +93,11 @@ test('Standard formula: e2e test', () => {
         'SRM_API_Metadata_Client_Setting__mdt.CreatedDate',
         'Organization.UiSkin',
         'User.CompanyName'
-    ]
+    ].sort();
 
-    expect(Array.from(result.standardFields)).toEqual(expect.arrayContaining(expectedStandardFields)); 
+    const actualStandardFields = Array.from(result.standardFields).sort();
+
+    expect(actualStandardFields).toEqual(expectedStandardFields); 
 
     let expectedStandardObjects = [
         'OpportunityLineItem',
