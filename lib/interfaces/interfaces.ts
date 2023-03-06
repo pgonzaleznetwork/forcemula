@@ -55,10 +55,16 @@ class GenericObjectAdapter implements MetadataTypeAdapter{
                 instance: this._name
             })
         }
-        else{
+        else if(!this._name.endsWithIgnoreCase('__R')){
             metadatas.push({
                 type: MetadataType.STANDARD_OBJECT,
                 instance: this._name
+            })
+        }
+        else{
+            metadatas.push({
+                type: MetadataType.UNKNOWN_RELATIONSHIP,
+                instance:this._name
             })
         }
 
@@ -119,10 +125,13 @@ class FieldAdapter implements MetadataTypeAdapter{
 
     public transform(): Metadata[]{
 
-        return [{
-            type: (CustomEntity.isTypeOf(this.field) ? MetadataType.CUSTOM_FIELD : MetadataType.STANDARD_FIELD ),
-            instance: this.fullName
-        }]
+        return [
+            {
+                type: (CustomEntity.isTypeOf(this.field) ? MetadataType.CUSTOM_FIELD : MetadataType.STANDARD_FIELD ),
+                instance: this.fullName
+            },
+            ...this.parentObject.transform()
+        ]
     }
 }
 
@@ -178,7 +187,6 @@ class CustomMetadataTypeRecordAdapter implements MetadataTypeAdapter{
         return [
 
             ...new FieldAdapter(sobject,fieldName).transform(),
-            ...new CustomMetadataTypeObjectAdapter(sobject).transform(),
             {
                 instance: `${sobject}.${sobjInstance}`,
                 type: MetadataType.CUSTOM_METADATA_TYPE_RECORD

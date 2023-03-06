@@ -7,8 +7,6 @@ const {FieldAdapter,
     SObjectTypeAdapter} = require('../lib/interfaces/interfaces');
 
 
-
-
 function parseType(token: string,sourceObjectName: string){
 
     let types = []
@@ -113,7 +111,6 @@ function parseType(token: string,sourceObjectName: string){
             {
                 //becomes User.Manager__c
                 sObjectField.fullName = `User.${sObjectField.fieldName}`
-                //sObjectField.fullName = rField.getNameAsUserField());
             }
 
             else if(sObjectField.fieldName.toUpperCase() === 'PARENTID'){
@@ -122,27 +119,22 @@ function parseType(token: string,sourceObjectName: string){
                     lastKnownParentName = baseObjectName;
                 }
                 else{
-                    //let relationshipField = new FieldAdapter(lastKnownParentName,sObjectField.fieldName);
                     sObjectField.fullName = `${lastKnownParentName}.${sObjectField.fieldName}`;
                     
                 }
             }
-            
-            parseField(sObjectField);
+            types.push(...sObjectField.transform());
+            //parseField(sObjectField);
         });
     }
 
     else{      
         //we reach here if the formula is a single field, like "Name", which is valid syntax
         let sObjectField = new FieldAdapter(sourceObjectName,token);
-        parseField(sObjectField);
+        types.push(...sObjectField.transform());
+       // parseField(sObjectField);
     }
 
-    function parseField(sObjectField: InstanceType<typeof FieldAdapter>){
-
-        types.push(transform.parseField(sObjectField.fullName));
-        types.push(transform.parseObject(sObjectField.objectName));
-    }
     
     return types;
 
