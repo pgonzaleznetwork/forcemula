@@ -6,6 +6,9 @@ const {FieldAdapter,
     CustomSettingAdapter,
     SObjectTypeAdapter} = require('../lib/interfaces/interfaces');
 
+
+
+
 function parseType(token: string,sourceObjectName: string){
 
     let types = []
@@ -74,7 +77,7 @@ function parseType(token: string,sourceObjectName: string){
             if(!isLastField){
 
                 //Account.Oppty__r
-                if(fieldApiName.toUpperCase().endsWith('__R')){
+                if(fieldApiName.endsWithIgnoreCase('__R')){
                    //becomes Account.Oppty__c
                     sObjectField.fullName = fieldApiName.slice(0,-1).concat('c');
                 }
@@ -86,8 +89,8 @@ function parseType(token: string,sourceObjectName: string){
             }
 
             //Account.SBQQ__OriginalOppty__r.
-            if(baseObjectName.toUpperCase().startsWith('SBQQ__') 
-            && baseObjectName.toUpperCase().endsWith('__R'))
+            if(baseObjectName.startsWithIgnoreCase('SBQQ__') 
+            && baseObjectName.endsWithIgnoreCase('__R'))
             {
                 //TO DO REPLACE WITH GENERIC FUNCTION TO GET MAPPING
                 //sObjectField.fullName = rField.getNameAsCPQField(sourceObjectName));
