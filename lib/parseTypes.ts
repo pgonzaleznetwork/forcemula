@@ -14,20 +14,20 @@ function parseType(token: string,sourceObjectName: string){
     //this order matters, we have to evaluate object types before anything else because the syntax can be extremely similar to other types
 
 
-    if(SObjectTypeAdapter.isTypeOf(token)){
-        types.push(...new SObjectTypeAdapter(token).transform());
-    }
-
-    else if(CustomMetadataTypeRecordAdapter.isTypeOf(token)){
+    if(CustomMetadataTypeRecordAdapter.isTypeOf(token)){
         types.push(...new CustomMetadataTypeRecordAdapter(token).transform());
     }
-   
-    else if(CustomLabelAdapter.isTypeOf(token)){
-        types.push(...new CustomLabelAdapter(token).transform());
+
+    else if(SObjectTypeAdapter.isTypeOf(token)){
+        types.push(...new SObjectTypeAdapter(token).transform());
     }
 
     else if(CustomSettingAdapter.isTypeOf(token)){
         types.push(...new CustomSettingAdapter(token).transform());
+    }
+   
+    else if(CustomLabelAdapter.isTypeOf(token)){
+        types.push(...new CustomLabelAdapter(token).transform());
     }
 
     

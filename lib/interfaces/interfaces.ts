@@ -158,7 +158,14 @@ class CustomMetadataTypeRecordAdapter implements MetadataTypeAdapter{
         let parts: string[] = name.split('.');
         let [mdType,sobject,sobjInstance,fieldName] = parts;
 
-        return (parts.length === 4 && sobject.endsWithIgnoreCase('__mdt'));
+        return (
+            parts.length === 4 
+            && 
+            sobject.endsWithIgnoreCase('__mdt')
+            &&
+            mdType.toUpperCase() == '$CUSTOMMETADATA'
+            
+            );
     }
 
     public transform(): Metadata[]{
