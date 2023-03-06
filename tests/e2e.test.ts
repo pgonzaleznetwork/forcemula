@@ -158,15 +158,17 @@ test('Standard formula: e2e test', () => {
 
     expect(Array.from(result.customLabels)).toEqual(expectedCustomLabels); 
 
+    //TO DO: CUSTOM SETTINGS ALREADY EXIST IN CUSTOM OBJECT, I SHOULD RETURN REAL METADATA TYPES
     let expectedCustomSettings = [
         'Customer_Support_Setting__c'
     ]
 
     expect(Array.from(result.customSettings)).toEqual(expectedCustomSettings); 
 
-    let expectedCustomObjects = ['Center__c'];
+    let expectedCustomObjects = ['Center__c','Customer_Support_Setting__c'].sort();
+    const actualCustomObjects = Array.from(result.customObjects).sort();
 
-    expect(Array.from(result.customObjects)).toEqual(expect.arrayContaining(expectedCustomObjects)); 
+    expect(actualCustomObjects).toEqual(expectedCustomObjects); 
 
     let expectedUnknownRelationships = [ 'Opportunity__r', 'Related_Asset__r' ];
 

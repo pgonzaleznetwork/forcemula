@@ -78,7 +78,6 @@ class FieldAdapter implements MetadataTypeAdapter{
     private parentObject: GenericObjectAdapter;
     
     constructor(protected object: string, protected field: string){
-       // console.log('creating field adapter for',object,field)
         this.parentObject = new GenericObjectAdapter(object);
     }
 
