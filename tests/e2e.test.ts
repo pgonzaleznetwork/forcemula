@@ -72,9 +72,11 @@ test('Standard formula: e2e test', () => {
 
     let expectedFunctions = [
         'IF','TRUE','FALSE','TEXT'
-    ]
+    ].sort();
 
-    expect(Array.from(result.functions)).toEqual(expect.arrayContaining(expectedFunctions)); 
+    const actualFunctions = Array.from(result.functions).sort();
+
+    expect(actualFunctions).toEqual(expectedFunctions); 
 
     let expectedStandardFields = [
         'OpportunityLineItem.OwnerId',
@@ -107,9 +109,11 @@ test('Standard formula: e2e test', () => {
         'Opportunity',
         'Account',
         'Organization'
-    ]
+    ].sort();
 
-    expect(Array.from(result.standardObjects)).toEqual(expect.arrayContaining(expectedStandardObjects)); 
+    const actualStandardObjects= Array.from(result.standardObjects).sort();
+
+    expect(actualStandardObjects).toEqual(expectedStandardObjects); 
 
     let expectedCustomFields = [
         'Trigger_Context_Status__mdt.Enable_After_Insert__c',
@@ -117,16 +121,20 @@ test('Standard formula: e2e test', () => {
         'Opportunity__r.Related_Asset__c',
         'Center__c.My_text_field__c',
         'Customer_Support_Setting__c.Email_Address__c'
-    ]
+    ].sort();
 
-    expect(Array.from(result.customFields)).toEqual(expect.arrayContaining(expectedCustomFields)); 
+    const actualCustomFields = Array.from(result.customFields).sort();
+
+    expect(actualCustomFields).toEqual(expectedCustomFields); 
 
     let expectedcustomMetadataTypeRecords = [
         'Trigger_Context_Status__mdt.by_handler',
         'Trigger_Context_Status__mdt.by_class'
-    ]
+    ].sort();
 
-    expect(Array.from(result.customMetadataTypeRecords)).toEqual(expect.arrayContaining(expectedcustomMetadataTypeRecords)); 
+    const actualCustomMetadataTypeRecords = Array.from(result.customMetadataTypeRecords).sort();
+
+    expect(actualCustomMetadataTypeRecords).toEqual(expectedcustomMetadataTypeRecords); 
 
     let unexpectedcustomMetadataTypeRecords = [
         'SRM_API_Metadata_Client_Setting__mdt.Fields',
@@ -137,22 +145,24 @@ test('Standard formula: e2e test', () => {
     let expectedCustomMetadataTypes = [
         'Trigger_Context_Status__mdt',
         'SRM_API_Metadata_Client_Setting__mdt'
-    ]
+    ].sort();
 
-    expect(Array.from(result.customMetadataTypes)).toEqual(expect.arrayContaining(expectedCustomMetadataTypes));
+    const actualCustomMetadataTypes = Array.from(result.customMetadataTypes).sort();
+
+    expect(actualCustomMetadataTypes).toEqual(expectedCustomMetadataTypes);
 
 
     let expectedCustomLabels = [
         'Details'
     ]
 
-    expect(Array.from(result.customLabels)).toEqual(expect.arrayContaining(expectedCustomLabels)); 
+    expect(Array.from(result.customLabels)).toEqual(expectedCustomLabels); 
 
     let expectedCustomSettings = [
         'Customer_Support_Setting__c'
     ]
 
-    expect(Array.from(result.customSettings)).toEqual(expect.arrayContaining(expectedCustomSettings)); 
+    expect(Array.from(result.customSettings)).toEqual(expectedCustomSettings); 
 
     let expectedCustomObjects = ['Center__c'];
 
@@ -160,7 +170,7 @@ test('Standard formula: e2e test', () => {
 
     let expectedUnknownRelationships = [ 'Opportunity__r', 'Related_Asset__r' ];
 
-    expect(Array.from(result.unknownRelationships)).toEqual(expect.arrayContaining(expectedUnknownRelationships)); 
+    expect(Array.from(result.unknownRelationships)).toEqual(expectedUnknownRelationships); 
 
 
 })
