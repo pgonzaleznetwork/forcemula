@@ -73,24 +73,6 @@ class GenericObjectAdapter implements MetadataTypeAdapter{
 
 }
 
-class Field{
-
-    public isTypeOf(expression: string){
-
-        expression = expression.toUpperCase();
-
-        if(
-            !grammar.operators.includes(expression)
-            && !grammar.functions.includes(expression)
-            && !['$LABEL.','$SETUP.','$OBJECTTYPE.'].includes(expression)   
-        ){
-            return true;
-        }
-        return false;
-    }
-
-}
-
 class FieldAdapter implements MetadataTypeAdapter{
 
     private parentObject: GenericObjectAdapter;
