@@ -21,7 +21,7 @@ interface MetadataTypeAdapter{
 class CustomEntity{
 
     public static isTypeOf(name: string): boolean{
-        return name.endsWithIgnoreCase('__C');
+        return name.endsWithIgnoreCase('__c');
     }
 
 }
@@ -55,7 +55,7 @@ class GenericObjectAdapter implements MetadataTypeAdapter{
                 instance: this._name
             })
         }
-        else if(!this._name.endsWithIgnoreCase('__R')){
+        else if(!this._name.endsWithIgnoreCase('__r')){
             metadatas.push({
                 type: MetadataType.STANDARD_OBJECT,
                 instance: this._name
@@ -146,7 +146,7 @@ class CustomMetadataTypeObjectAdapter implements MetadataTypeAdapter{
     }
 
     public static isTypeOf(name: string): boolean{
-        return name.endsWithIgnoreCase('__MDT');
+        return name.endsWithIgnoreCase('__mdt');
     }
 
     public transform(): Metadata[]{
@@ -176,7 +176,7 @@ class CustomMetadataTypeRecordAdapter implements MetadataTypeAdapter{
         let parts: string[] = name.split('.');
         let [mdType,sobject,sobjInstance,fieldName] = parts;
 
-        return (parts.length === 4 && sobject.endsWithIgnoreCase('__MDT'));
+        return (parts.length === 4 && sobject.endsWithIgnoreCase('__mdt'));
     }
 
     public transform(): Metadata[]{
