@@ -1,5 +1,3 @@
-import { FieldAdapter } from "./interfaces/interfaces";
-
 const {parts,getField,getObject} = require('./utils');
 const check = require('./parser/grammarChecks');
 const transform = require('./parser/transformations');
