@@ -101,12 +101,16 @@ function parse(request:ParseRequest){
         currentWord = '';
     }
 
+    const json = {
+        functions : Array.from(functions),
+        operators : Array.from(operators),
+        ...allTypes
+    }
+
+    //const packageXml = generatePackageXml(jsonFormat);
+
     return {
-        json:{
-            functions : Array.from(functions),
-            operators : Array.from(operators),
-            ...allTypes
-        },
+        json,
         packageXml:'TODO'
         
     }
