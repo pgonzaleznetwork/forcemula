@@ -102,9 +102,13 @@ function parse(request:ParseRequest){
     }
 
     return {
-        functions : Array.from(functions),
-        operators : Array.from(operators),
-        ...allTypes
+        json:{
+            functions : Array.from(functions),
+            operators : Array.from(operators),
+            ...allTypes
+        },
+        packageXml:'TODO'
+        
     }
 
 }
