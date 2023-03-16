@@ -165,7 +165,7 @@ test('Standard formula: e2e test', () => {
 
     expect(Array.from(result.customSettings)).toEqual(expectedCustomSettings); 
 
-    let expectedCustomObjects = ['Center__c','Customer_Support_Setting__c'].sort();
+    let expectedCustomObjects = ['Center__c'].sort();
     const actualCustomObjects = Array.from(result.customObjects).sort();
 
     expect(actualCustomObjects).toEqual(expectedCustomObjects); 

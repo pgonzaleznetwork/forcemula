@@ -275,7 +275,7 @@ class CustomSettingAdapter implements MetadataTypeAdapter{
             type:MetadataType.CUSTOM_SETTING,
             instance: object
             },
-            ...new FieldAdapter(object,field).transform()
+            new FieldAdapter(object,field).transform()[0]
         ]
     }
 }
