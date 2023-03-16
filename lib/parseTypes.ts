@@ -1,9 +1,11 @@
+import { FieldAdapter } from "./interfaces/interfaces";
+
 const {parts,getField,getObject} = require('./utils');
 const check = require('./parser/grammarChecks');
 const transform = require('./parser/transformations');
 const {FieldAdapter,
     CustomLabelAdapter,CustomMetadataTypeRecordAdapter,
-    CustomSettingAdapter,MetadataTypeAdapter,
+    CustomSettingAdapter,
     SObjectTypeAdapter} = require('../lib/interfaces/interfaces');
 
 
@@ -87,18 +89,7 @@ function parseType(token: string,sourceObjectName: string){
                 if(baseObjectName.startsWithIgnoreCase('SBQQ__') 
                 && baseObjectName.endsWithIgnoreCase('__R'))
                 {
-                    //TO DO REPLACE WITH GENERIC FUNCTION TO GET MAPPING
-                    //sObjectField.fullName = rField.getNameAsCPQField(sourceObjectName));
-    
-                    const cpqMapping = require('./mappings/cpq');
-    
-                    const [relationshipName,field] = sObjectField.fullName.split('.');
-            
-                    let apiName = cpqMapping[sourceObjectName.toUpperCase()]?.[relationshipName.toUpperCase()];
-                
-                    let newName = `${apiName ? apiName : relationshipName}.${field}`
-    
-                    sObjectField.fullName = newName;
+                    sObjectField.fullName = resolveManagedPackageRelationship('cpq',sourceObjectName,sObjectField);
                 }
     
                 //Owner.Manager__c
@@ -133,6 +124,30 @@ function parseType(token: string,sourceObjectName: string){
  
     
     return types;
+
+}
+
+/**
+ * 
+ * This method retrieves a specific managed package mapping of custom relationship names to their actual field names.
+ * See ./mappings/cpq for an example
+ * 
+ * @param packageName The name of the of the managed package we are getting the mapping for
+ * @param sourceObjectName 
+ * @param sObjectField The field we want to resolve the name for
+ * @returns The resolved name of the field
+ */
+function resolveManagedPackageRelationship(packageName: string,sourceObjectName: string,sObjectField: FieldAdapter): string{
+
+    const mapping = require(`./mappings/${packageName}`);
+    
+    const [relationshipName,field] = sObjectField.fullName.split('.');
+
+    let apiName = mapping[sourceObjectName.toUpperCase()]?.[relationshipName.toUpperCase()];
+
+    let newName = `${apiName ? apiName : relationshipName}.${field}`
+
+    return newName;
 
 }
 
