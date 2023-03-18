@@ -1,6 +1,6 @@
-const {parts,getField,getObject} = require('./utils');
+
 const check = require('./parser/grammarChecks');
-const transform = require('./parser/transformations');
+
 const {FieldAdapter,
     CustomLabelAdapter,CustomMetadataTypeRecordAdapter,
     CustomSettingAdapter,
@@ -174,5 +174,7 @@ function removeProcessBuilderPrefix(token: string): string{
 
     return sanitizedToken;
 }
+
+export {parseType}
 
 module.exports = parseType;
