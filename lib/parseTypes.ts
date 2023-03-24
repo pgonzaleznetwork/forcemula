@@ -1,6 +1,3 @@
-
-const check = require('./parser/grammarChecks');
-
 const {FieldAdapter,
     CustomLabelAdapter,CustomMetadataTypeRecordAdapter,
     CustomSettingAdapter,
@@ -24,9 +21,12 @@ function parseType(token: string,sourceObjectName: string){
         }
     })
 
+    //if we get here and there are no types, we can safely assume the token didn't
+    //match any of the previous adapter and it's most likely a field expression
     if(types.length == 0){
         
-        if(check.isRelationshipField(token)){
+        //is a relationship field i.e Account.OpportunityId
+        if(token.includes('.')){
 
             token = removeProcessBuilderPrefix(token)
       
