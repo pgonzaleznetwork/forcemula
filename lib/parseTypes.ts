@@ -175,6 +175,23 @@ function removeProcessBuilderPrefix(token: string): string{
     return sanitizedToken;
 }
 
+String.prototype.startsWithIgnoreCase = function(input: string): boolean{
+    if(input){
+        const upperInput = input.toUpperCase();
+        return this.toUpperCase().startsWith(upperInput);
+    }
+    return false;
+    
+}
+
+String.prototype.endsWithIgnoreCase = function(input: string): boolean{
+    if(input){
+        const upperInput = input.toUpperCase();
+        return this.toUpperCase().endsWith(upperInput);
+    }
+    return false;
+}
+
 export {parseType}
 
 module.exports = parseType;
