@@ -2,7 +2,7 @@
   "name": "forcemula",
   "version": "0.1.0",
   "description": "Extract fields from Salesforce formulas",
-  "main": "src/index.js",
+  "main": "dist/src/index.js",
   "scripts": {
     "start": "node src/index.js",
     "dev": " parallelshell 'tsc -w' 'npm run watch' ",
