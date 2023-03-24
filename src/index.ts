@@ -110,9 +110,7 @@ function parse(request:ParseRequest){
     //const packageXml = generatePackageXml(jsonFormat);
 
     return {
-        json,
-        packageXml:'TODO'
-        
+        json
     }
 
 }
