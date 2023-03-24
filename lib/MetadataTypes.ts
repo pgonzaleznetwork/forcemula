@@ -10,7 +10,9 @@ module.exports = class MetadataType {
     static CUSTOM_METADATA_TYPE = new MetadataType("customMetadataTypes")
     static UNKNOWN_RELATIONSHIP = new MetadataType("unknownRelationships")
 
-    constructor(name) {
+    name: string;
+
+    constructor(name: string) {
         this.name = name
     }
 

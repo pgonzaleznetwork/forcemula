@@ -1,33 +1,41 @@
-let parseType = require('../lib/parseTypes');
-let _ = require('../lib/utils');
-let check = require('../lib/parser/grammarChecks')
-let MetadataType = require('../lib/MetadataTypes');
+const parseType = require('../lib/parseTypes');
+const _ = require('../lib/utils');
+const check = require('../lib/parser/grammarChecks')
+const MetadataType = require('../lib/MetadataTypes');
+const transform = require('../lib/parser/transformations');
 
-function parse({object,formula}){
+type ParseRequest = {
+    parentObject:string,
+    formula:string
+}
 
-    if(!object || !formula) throw "MISSING_PARAMETER"
+function parse(request:ParseRequest){
 
-    let functions = new Set();
-    let operators = new Set();
-    let types = [];
+    const {parentObject,formula} = request;
+
+    if(!parentObject || !formula) throw "MISSING_PARAMETER"
+
+    const functions = new Set<string>;
+    const operators = new Set<string>;
+    const types = [];
     let allTypes = {};
 
-    let chars = _.removeWhiteSpace(formula).split('');
+    const chars: string[] = _.removeWhiteSpace(formula).split('');
 
     let currentWord = '';
     let insideString = false;
     let insideComment = false;
 
-    chars.forEach((char,index,text) => {
+    chars.forEach((char: string ,index: number,originalChars: string[]) => {
 
-        let isLastChar = (text.length-1 == index);
+        let isLastChar: boolean = (originalChars.length-1 == index);
 
-        if(char == '/' && !isLastChar && check.isCommentStart(char+text[index+1])){
+        if(char == '/' && !isLastChar && check.isCommentStart(char+originalChars[index+1])){
             insideComment = true;
             return;
         }
 
-        if(char == '*' && !isLastChar && check.isCommentEnd(char+text[index+1])){
+        if(char == '*' && !isLastChar && check.isCommentEnd(char+originalChars[index+1])){
             insideComment = false;
             return;
         }
@@ -63,22 +71,27 @@ function parse({object,formula}){
 
     allTypes = organizeInstancesByType(types);
 
-    function determineType(value){
+    function determineType(token: string){
 
-        if(check.isFunction(value)){
+        const upperToken = token.toUpperCase();
 
-            functions.add(_.$(value));
-            clearWord();
-            return;
-        }
-
-        else if(check.isNumber(value)){
+        if(check.isNumber(upperToken)){
 
             clearWord();
             return;
         }
+
+        else if(check.isFunction(upperToken)){
+
+            functions.add(upperToken)
+            clearWord();
+            return;
+        }
+
+        
         else{
-            types.push(...parseType(value,object));
+
+            types.push(...parseType(token,parentObject));
         }
 
         clearWord();
@@ -88,10 +101,18 @@ function parse({object,formula}){
         currentWord = '';
     }
 
-    return {
+    const json = {
         functions : Array.from(functions),
         operators : Array.from(operators),
         ...allTypes
+    }
+
+    //const packageXml = generatePackageXml(jsonFormat);
+
+    return {
+        json,
+        packageXml:'TODO'
+        
     }
 
 }
