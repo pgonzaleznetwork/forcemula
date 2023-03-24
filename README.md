@@ -108,7 +108,7 @@ let formulaText = getFromSalesforceApi(...);
 
 let parseRequest = {
     //this is the object that the formula belongs to
-    object:'OpportunityLineItem',
+    parentObject:'OpportunityLineItem',
     formula:formulaText
 }
 
