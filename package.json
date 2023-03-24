@@ -25,8 +25,5 @@
       "text",
       "lcov"
     ]
-  },
-  "dependencies": {
-    "jest-coverage-badges": "^1.0.0"
   }
 }
