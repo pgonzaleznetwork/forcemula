@@ -1,7 +1,7 @@
 const {FieldAdapter,
     CustomLabelAdapter,CustomMetadataTypeRecordAdapter,
     CustomSettingAdapter,
-    SObjectTypeAdapter} = require('../lib/interfaces/interfaces');
+    SObjectTypeAdapter} = require('../lib/adapters/adapters');
 
 
 function parseType(token: string,sourceObjectName: string){
